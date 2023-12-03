@@ -1335,11 +1335,34 @@ object Test09_Problem_DataTypeConversion {
 
 2. 实例操作
 
-   ```
+   ```scala
+   package com.scala.chapter03
+   
+   object Test01_TestOperator {
+   
+     def main(args: Array[String]): Unit = {
+   
+       //3. 逻辑运算符
+       def m(n: Int): Int = {
+         println("m被调用")
+         return n
+       }
+   
+       val n = 1
+       println((4 > 5) && m(n) > 0) //false
+   
+       // 判断一个字符串是否为空
+       //扩展避免逻辑与空指针异常
+       def isNotEmpty(str: String): Boolean = {
+         return str != null && !("".equals(str.trim))
+       }
+   
+       println(isNotEmpty(null)) //false
+     }
+   
+   }
    
    ```
-
-
 
 ## 赋值运算符
 
@@ -1366,6 +1389,24 @@ object Test09_Problem_DataTypeConversion {
 2. 实例操作
 
    ```scala
+   package com.scala.chapter03
+   
+   object Test01_TestOperator {
+   
+     def main(args: Array[String]): Unit = {
+       // 4. 赋值运算符
+       /*
+         var b: Byte = 10
+         b += 1
+         println(b)  //error 运行时报异常,会自动升格为int类型
+         */
+   
+       var i: Int = 12
+       i += 1
+       println(i)  //13
+     }
+   
+   }
    
    ```
 
@@ -1392,8 +1433,58 @@ object Test09_Problem_DataTypeConversion {
 2. 实例操作
 
    ```scala
+   package com.scala.chapter03
+   
+   object Test01_TestOperator {
+   
+     def main(args: Array[String]): Unit = {
+       // 5. 位运算符
+       val a: Byte = 60
+       println(a << 3) //0011 1100 => 1 1110 0000 =>480
+       println(a >> 2) //0011 1100 => 0000 1111 =>15
+   
+       val b: Short = -13
+       println(b << 2) //1000 1101 => 1111 0010 => 1111 0011 => 1100 1100 => 1100 1011 =>1011 0100 =>-52
+       println(b >> 2) //1000 1101 => 1111 0010 => 1111 0011 => 0011 1100 => 0011 1011 =>1000 0100 =>-4
+       println(b >>> 2) //1073741820
+     }
+   
+   }
    
    ```
+
+## Scala 运算符本质
+
+在 Scala 中其实是没有运算符的，所有运算符都是方法。 
+
+1. 当调用对象的方法时，点.可以省略 
+2. 如果函数参数只有一个，或者没有参数，()可以省略
+
+```scala
+package com.scala.chapter03
+
+object Test01_TestOperator {
+
+  def main(args: Array[String]): Unit = {
+    // 6. 运算符的本质
+    val n1: Int = 12
+    val n2: Int = 37
+    //1. 当调用对象的方法时，.可以省略
+    println(n1.+(n2)) //49
+    println(n1 + n2) //49
+
+    println(1.34.*(25)) //33.5
+    println(1.34 * 25) //33.5
+
+    //2. 如果函数参数只有一个，或者没有参数，()可以省略
+    //println(1.toString())
+    //println(1 toString)
+    //println(1.1 toInt toString)
+  }
+
+}
+
+```
 
 
 
@@ -1424,9 +1515,19 @@ object Test09_Problem_DataTypeConversion {
    需求：输入人的年龄，如果该同志的年龄小于 18 岁，则输出“童年”
 
    ```scala
+     def main(args: Array[String]): Unit = {
+       println("请输入你的年龄:")
+       val age: Int = StdIn.readInt()
    
+       // 1. 单分支
+       if (age >= 18) {
+         println("成年")
+       }
+   
+       println("===================")
+     }
+   }
    ```
-
    
 
 ### 双分支
@@ -1448,10 +1549,20 @@ object Test09_Problem_DataTypeConversion {
    需求：输入年龄，如果年龄小于 18 岁，则输出“童年”。否则，输出“成年
 
    ```scala
+     def main(args: Array[String]): Unit = {
+       println("请输入你的年龄:")
+       val age: Int = StdIn.readInt()
+   
+       // 2. 双分支
+       if (age >= 18) {
+         println("成年")
+       } else {
+         println("未成年")
+       }
+     }
+   }
    
    ```
-
-
 
 ### 多分支
 
@@ -1477,29 +1588,105 @@ object Test09_Problem_DataTypeConversion {
    1. 需求 1：需求：输入年龄，如果年龄小于 18 岁，则输出“童年”。如果年龄大于 等于 18 且小于等于 30，则输出“中年”，否则，输出“老年”
 
       ```scala
+        def main(args: Array[String]): Unit = {
+          println("请输入你的年龄:")
+          val age: Int = StdIn.readInt()
+          // 3. 多分支
+          if (age <= 6) {
+            println("童年")
+          } else if (age < 18) {
+            println("青少年")
+          } else if (age < 35) {
+            println("青年")
+          } else if (age < 60) {
+            println("中年")
+          } else {
+            println("老年")
+          }
+        }
+      }
       
       ```
-
+   
    2. 需求 2：Scala 中 if else 表达式其实是有返回值的，具体返回值取决于满足条件的 代码体的最后一行内容
-
+   
       ```scala
+        def main(args: Array[String]): Unit = {
+          println("请输入你的年龄:")
+          val age: Int = StdIn.readInt()
+          // 4. 分支语句的返回值
+          val result: String = if (age <= 6) {
+            println("童年")
+            "童年"
+          } else if (age < 18) {
+            println("青少年")
+            "青少年"
+          } else if (age < 35) {
+            println("青年")
+            "青年"
+          } else if (age < 60) {
+            println("中年")
+            "中年"
+          } else {
+            println("老年")
+            "老年"
+          }
+          println(result)
+        }
+      }
       
       ```
-
+   
    3. 需求 3：Scala 中返回值类型不一致，取它们共同的祖先类型
-
+   
       ```scala
+        def main(args: Array[String]): Unit = {
+          println("请输入你的年龄:")
+          val age: Int = StdIn.readInt()
+          // 4. 分支语句的返回值
+          val result: Any = if (age <= 6) {
+            println("童年")
+            "童年"
+          } else if (age < 18) {
+            println("青少年")
+            "青少年"
+          } else if (age < 35) {
+            println("青年")
+            age
+          } else if (age < 60) {
+            println("中年")
+            age
+          } else {
+            println("老年")
+            age
+          }
+          println(result)
+        }
+      }
       
       ```
-
+   
    4. 需求 4：Java 中的三元运算符可以用 if else 实现
-
+   
       > 如果大括号{}内的逻辑代码只有一行，大括号可以省略。如果省略大括号，if 只对最近 的一行逻辑代码起作用
-
+   
       ```scala
+        def main(args: Array[String]): Unit = {
+          println("请输入你的年龄:")
+          val age: Int = StdIn.readInt()
+          // java中三元运算符 String res = (age >= 18)?"成年":"未成年"
+          val res: String = if (age >= 18) {
+            "成年"
+          } else {
+            "未成年"
+          }
+      
+          val res2 = if (age >= 18) "成年" else "未成年"
+        }
+      }
       
       ```
-
+      
       
 
 ## 嵌套分支
@@ -1523,20 +1710,37 @@ object Test09_Problem_DataTypeConversion {
    需求：如果输入的年龄小于 18，返回“童年”。如果输入的年龄大于等于 18，需要再判 断：如果年龄大于等于 18 且小于 30，返回“中年”；如果其他，返回“老年”
 
    ```scala
+     def main(args: Array[String]): Unit = {
+       println("请输入你的年龄:")
+       val age: Int = StdIn.readInt()
+       // 5. 嵌套分支
+       if (age >= 18) {
+         println("成年")
+         if (age >= 35) {
+           if (age >= 60) {
+             println("老年")
+           } else {
+             println("中年")
+           }
+         }
+       } else {
+         println("未成年")
+         if (age <= 6) {
+           println("童年")
+         } else {
+           println("青少年")
+         }
+       }
+     }
+   }
    
    ```
-
-
 
 ## Switch 分支结构
 
 > 在 Scala 中没有 Switch，而是使用**模式匹配来处理**。 
 >
 > 模式匹配涉及到的知识点较为综合，因此我们放在后面讲解
-
-
-
-
 
 ## For 循环控制
 
@@ -1546,7 +1750,7 @@ Scala 也为 for 循环这一常见的控制结构提供了非常多的特性，
 
 1. 基本语法
 
-   ```
+   ```scala
    for(i <- 1 to 3){
     	print(i + " ")
    }
@@ -1561,14 +1765,29 @@ Scala 也为 for 循环这一常见的控制结构提供了非常多的特性，
    需求：输出 5 句 "宋宋，告别海狗人参丸吧"
 
    ```scala
+   object Test02_ForLoop {
    
+     def main(args: Array[String]): Unit = {
+       // java for语法： for(int i = 0; i < 10; i++){ System.out.println(i + ". hello world") }
+       // 1. 范围遍历
+       for (i <- 1 to 3) {
+         println(i + " hello world")
+       }
+       // 与上面等价
+       for (i: Int <- 1.to(3)) {
+         println(i + " hello world")
+       }
+         
+     }
+   
+   }
    ```
 
 ### 范围数据循环（Until）
 
 1. 基本语法
 
-   ```
+   ```scala
    for(i <- 1 until 3) {
     	print(i + " ")
    }
@@ -1583,8 +1802,36 @@ Scala 也为 for 循环这一常见的控制结构提供了非常多的特性，
    需求：输出 5 句 "宋宋，告别海狗人参丸吧"
 
    ```scala
-   	
+   	object Test02_ForLoop {
+   
+     def main(args: Array[String]): Unit = {
+      /* for (i <- Range(1, 3)) {
+         println(i + " hello world")
+       }*/
+       // 与上面等价
+       for (i <- 1 until (3)) {
+         println(i + " hello world")
+       }
+         
+     }
+   
+   }
    ```
+   
+   ```scala
+       // 2.集合
+       for (i <- Array(11, 22, 33)) {
+         println(i)
+       }
+   
+       for (i <- List(22, 33, 44)) {
+         println(i)
+       }
+       for (i <- Set(33, 44, 55)) {
+         println(i)
+       }
+   ```
+   
 
 ### 循环守卫
 
@@ -1609,6 +1856,1890 @@ Scala 也为 for 循环这一常见的控制结构提供了非常多的特性，
       }
       ```
 
-      
+2. 实例操作
 
-# scala
+   需求：输出 1 到 10 中，不等于 5 的值
+
+   ```scala
+       // 3. 循环守卫
+       for (i <- 1 to 10) {
+         if (i != 5) {
+           println(i)
+         }
+       }
+   
+       for (i <- 1 to 10 if i != 5) {
+         println(i)
+       }
+   ```
+
+   
+
+
+### 循环步长
+
+1. 基本语法
+
+   ```scala
+   for (i <- 1 to 10 by 2) {
+    	println("i=" + i)
+   }
+   ```
+
+   说明：by 表示步长
+
+2. 实例操作
+
+   需求：输出 1 到 10 以内的所有奇数
+
+   ```scala
+       // 4. 循环步长
+       for (i <- 1 to 10 by 2) {
+         println(i)
+       }
+   ```
+   
+   输出结果
+   
+   ```
+   1
+   3
+   5
+   7
+   9
+   ```
+   
+   > 注意:error，step不能为0
+   >
+   > ```scala
+   > /*    
+   > for (i <- 30 to 13 by 0) {
+   >       println(i)
+   >     }
+   > */
+   > ```
+   
+   > 可以小数的方式进行递增
+   >
+   > ```scala
+   >     for (i <- 1.0 to 10.0 by 0.3) {
+   >       println(i)
+   >     
+   > ```
+
+### 嵌套循环
+
+1. 基本语法
+
+   ```scala
+       for (i <- 1 to 3; j <- 1 to 3) {
+         println("i = " + i + " j = " + j)
+       }
+   ```
+
+   说明：没有关键字，所以范围后一定要加；来隔断逻辑
+
+2. 基本语法
+
+   上面的代码等价
+
+   ```scala
+       for (i <- 1 to 3) {
+         for (j <- 1 to 3) {
+           println("i = " + i + " j = " + j)
+         }
+       }
+   ```
+
+
+
+### 引入变量
+
+1. 基本语法
+
+   ```scala
+       for (i <- 1 to 10; j = 10 - i) {
+         println("i = " + i + " j = " + j)
+       }
+   ```
+
+   说明：
+
+   1. for 推导式一行中有多个表达式时，所以要加 ; 来隔断逻辑 
+   2. for 推导式有一个不成文的约定：当 for 推导式仅包含单一表达式时使用圆括号， 当包含多个表达式时，一般每行一个表达式，并用花括号代替圆括号，如下
+
+   ```scala
+       for {i <- 1 to 10
+            j = 10 - i
+       } {
+         println("i = " + i + " j = " + j)
+       }
+   ```
+
+2. 实例操作
+
+   上面的代码等价于
+
+   ```scala
+       for (i <- 1 to 10) {
+         val j = 10 - i
+         println("i = " + i + " j = " + j)
+       }
+   ```
+
+### 循环返回值
+
+基本语法
+
+```scala
+    val b = for (i <- 1 to 10) yield i * i
+    println(b)//Vector(1, 4, 9, 16, 25, 36, 49, 64, 81, 100)
+```
+
+> **说明：将遍历过程中处理的结果返回到一个新 Vector 集合中，使用 yield 关键字。** 
+>
+> **注意：开发中很少使用。**
+
+```scala
+    val a = for (i <- 1 to 10) {
+      i
+    }
+    println("a = " + a)	//a = ()
+```
+
+> 如有多个返回时默认只为空的,必须使用其yield关键字才可把遍历结果放到集合中
+>
+
+### 倒序打印
+
+1. 说明：如果想倒序打印一组数据，可以用 reverse
+
+2. 实例操作
+
+   需求：倒序打印 10 到 1
+
+   ```scala
+       for (i <- 1 to 10 reverse) {
+         println(i)
+       }
+   ```
+
+   ```
+   10
+   9
+   8
+   7
+   6
+   5
+   4
+   3
+   2
+   1
+   ```
+
+## While 和 do..While 循环控制
+
+> While 和 do..While 的使用和 Java 语言中用法相同
+
+### While 循环控制
+
+1. 基本语法
+
+   ```
+   循环变量初始化
+   while (循环条件) {
+        循环体(语句)
+        循环变量迭代
+   }
+   ```
+
+   说明：
+
+   1. 循环条件是返回一个布尔值的表达式
+   2. while 循环是先判断再执行语句
+   3. 与 for 语句不同，**while 语句没有返回值**，即整个 while 语句的**结果是 Unit 类型()**
+   4. **因为 while 中没有返回值**，所以当要用该语句来计算并返回结果时，就不可避免的使用变量，而变量需要声明在 while 循环的外部，那么就等同于循环的内部对外部的变量造成了影响，所以不推荐使用，**而是推荐使用 for 循环**
+
+2. 实例操作
+
+   需求：输出 5 句 "this is a while loop"
+
+   ```scala
+     def main(args: Array[String]): Unit = {
+       var a: Int = 5
+       while (a >= 1) {
+         println("this is a while loop:" + a)
+         a -= 1
+       }
+     }
+   
+   }
+   ```
+   
+
+### do..while 循环控制
+
+1. 基本语法
+
+   ```
+    循环变量初始化;
+    do{
+        循环体(语句)
+        循环变量迭代
+    } while(循环条件)
+   ```
+
+   说明
+
+   1. 循环条件是返回一个布尔值的表达式
+   2. do..while 循环是先执行，再判断
+
+2. 实例操作
+
+   需求：输出 1 句 "this is a do-while loop:"
+
+   ```scala
+     def main(args: Array[String]): Unit = {
+       var b: Int = 0
+       do {
+         println("this is a do-while loop:" + b)
+         b -= 1
+       } while (b > 0)
+     }
+   
+   }
+   ```
+
+### 循环中断
+
+1. 基本主明
+
+   Scala 内置控制结构特地去掉了 `break `和 `continue`，是为了更好的适应函数式编程，推荐使用函数式的风格解决`break`和`continue`的功能，而不是一个关键字。Scala中使用`breakable `控制结构来实现 `break `和 `continue `功能
+
+2. 实例操作
+
+   java代码退出循环
+
+   ```java
+   public class TestBreak {
+       public static void main(String[] args) {
+           try {
+   
+               for (int i = 0; i < 5; i++) {
+                   if (i == 3)
+                       // break
+                       throw new RuntimeException();
+                   System.out.println(i);
+               }
+           } catch (Exception e) {
+               // 什么都不做，只是退出循环
+           }
+           System.out.println("这是循环外的代码");
+       }
+   }
+   
+   ```
+
+   需求 1：采用异常的方式退出循环
+
+   ```scala
+   object Test06_Break {
+   
+     def main(args: Array[String]): Unit = {
+       // 1. 采用抛出异常的方式，退出循环
+       try {
+         for (i <- 0 until 5) {
+           if (i == 3)
+             throw new RuntimeException
+           println(i)
+         }
+       } catch {
+         case e: Exception => // 什么都不做，只是退出循环
+       }
+     }
+   }
+   ```
+
+   需求 2：采用 Scala 自带的函数，退出循环
+
+   ```scala
+       // 2. 使用Scala中的Breaks类的break方法，实现异常的抛出和捕捉
+       Breaks.breakable(
+         for (i <- 0 until 5) {
+           if (i == 3)
+             Breaks.break()
+           println(i)
+         }
+   
+       )
+   ```
+
+   需求 3：对 break 进行省略
+   
+   ```scala
+       Breaks.breakable(
+         for (i <- 0 until 5) {
+           if (i == 3)
+             break()
+           println(i)
+         }
+       )
+   ```
+   
+   需求 4：循环遍历 10 以内的所有数据，奇数打印，偶数跳过（continue）
+   
+   ```scala
+   object TestBreak {
+        def main(args: Array[String]): Unit = {
+            for (elem <- 1 to 10) {
+                if (elem % 2 == 1) {
+                	println(elem)
+                } else {
+                	println("continue")
+                }
+            }
+        }
+   }
+   ```
+
+## 多重循环
+
+1. 基本说明
+
+   1. 将一个循环放在另一个循环体内，就形成了嵌套循环。其中，for，while，do…while 均可以作为外层循环和内层循环。【建议一般使用两层，最多不要超过 3 层】
+   2. 设外层循环次数为 m 次，内层为 n 次，则内层循环体实际上需要执行 m*n 次。
+
+2. 实例操作
+
+   需求：打印出九九乘法表
+
+   ```scala
+   object Test03_Practice_MulTable {
+   
+     def main(args: Array[String]): Unit = {
+       for (i <- 1 to 9) {
+         for (j <- 1 to i) {
+           print(s"$j * $i = ${i * j}\t")
+         }
+         println()
+       }
+   
+       // 简写
+       for (i <- 1 to 9; j <- 1 to i) {
+         print(s"$j * $i = ${i * j}\t")
+         if (j == i) println()
+       }
+     }
+   
+   }
+   
+   ```
+   
+   需求,打印输出一个九层妖塔
+   
+   ```scala
+   object Test04_Practice_Pyramid {
+   
+     def main(args: Array[String]): Unit = {
+       for (i <- 1 to 9) {
+         val stars = 2 * i - 1
+         val spaces = 9 - i
+         println(" " * spaces + "*" * stars)
+       }
+   
+       // 简写,其效果与上一样
+       for (i <- 1 to 9; stars = 2 * i - 1; spaces = 9 - i) {
+         println(" " * spaces + "*" * stars)
+       }
+   
+       // 继续优化,与上效果一样
+       for (stars <- 1 to 17 by 2; spaces = (17 - stars) / 2) {
+         println(" " * spaces + "*" * stars)
+       }
+   
+     }
+   
+   }
+   ```
+   
+   
+   
+   ------
+   
+   
+
+# 第五章 函数式编程
+
+1. 面向对象编程
+
+   解决问题，分解对象，行为，属性，然后通过对象的关系以及行为的调用来解决问题
+
+   - 对象：用户
+   - 行为：登录、连接 JDBC、读取数据库
+   - 属性：用户名、密码
+
+2. 函数式编程
+
+   解决问题时，将问题分解成一个一个的步骤，将每个步骤进行封装（函数），通过调用这些封装好的步骤，解决问题
+
+   例如：请求->用户名、密码->连接 JDBC->读取数据库
+
+   > Scala 语言是一个完全面向对象编程语言。万物皆对象
+   >
+   > 对象的本质：对数据和行为的一个封装
+
+3. 在 Scala 中函数式编程和面向对象编程完美融合在一起了
+
+
+
+## 函数基础
+
+### 函数基本语法
+
+1. 基本语法
+
+   ![](http://www.dxb02.top/photos/scala/03.jpg)
+
+2. 实例操作
+
+   需求：定义一个函数，实现将传入的名称打印出来
+
+   ```scala
+     def main(args: Array[String]): Unit = {
+       // 定义函数
+       def sayHi(name: String): Unit = {
+         println("hi, " + name)
+       }
+       // 调用函数
+       sayHi("tom")
+   
+       // 调用对象方法
+       Test01_FunctionAndMethod.sayHi("jack")
+   
+       // 获取方法返回值
+       val result = Test01_FunctionAndMethod.sayHello("marry")
+       println(result)
+   
+     }
+   
+   
+     // 定义对象的方法
+     def sayHi(name: String): Unit = {
+       println("Hi , " + name)
+     }
+   
+     def sayHello(name: String): String = {
+       println("Hello , " + name)
+       return "Hello"
+     }
+   }
+   ```
+
+### 函数和方法的区别
+
+1. 核心概念
+
+   1. 为完成某一功能的程序语句的集合，称为函数
+   2. 类中的函数称之方法
+
+2. 案例实操
+
+   1. Scala 语言可以在任何的语法结构中声明任何的语法
+   2. 函数没有重载和重写的概念；方法可以进行重载和重写
+   3. Scala 中函数可以嵌套定义
+
+   ```scala
+   object Test00_FunctionAndMethod {
+   
+     //2. 方法可以进行重载和重写，程序可以执行
+     def main(): Unit = {
+   
+     }
+   
+     def main(args: Array[String]): Unit = {
+       // 1. Scala 语言可以在任何的语法结构中声明任何的语法
+       import java.util.Date
+       new Date()
+   
+   
+       // 2. 函数没有重载和重写的概念，程序报错
+       def test(): Unit = {
+         println("无参,无返回值")
+       }
+   
+       test()
+   
+       /*    def test(name: String): Unit = {
+             println()
+           }*/
+   
+       //3. Scala 中函数可以嵌套定义
+       def test2(): Unit = {
+         def test3(name: String): Unit = {
+           println("函数可以嵌套定义")
+         }
+       }
+   
+   
+     }
+   
+   }
+   ```
+
+### 函数定义
+
+1. 函数定义
+
+   1. 函数 1：无参，无返回值
+   2. 函数 2：无参，有返回值
+   3. 函数 3：有参，无返回值
+   4. 函数 4：有参，有返回值
+   5. 函数 5：多参，无返回值
+   6. 函数 6：多参，有返回值
+
+2. 实例操作
+
+   ```scala
+   package com.scala.chapter05
+   
+   object Test02_FunctionDefine {
+   
+     def main(args: Array[String]): Unit = {
+       //1. 函数1：无参，无返回值
+       def f1(): Unit = {
+         println("1. 无参,无返回值")
+       }
+   
+       f1() //1. 无参,无返回值
+   
+       /*
+       1. 无参,无返回值
+       ()
+        */
+       println(f1())
+   
+       println("====================")
+   
+   
+       // 2. 函数2：无参，有返回值
+       def f2(): Int = {
+         println("2.无参,有返回值")
+         return 11
+       }
+   
+       /*
+       2.无参,有返回值
+       11
+        */
+       println(f2())
+   
+   
+       println("====================")
+   
+       // 3. 函数3：有参，无返回值
+       def f3(name: String): Unit = {
+         println("3：有参，无返回值 " + name)
+       }
+   
+       /*
+       3：有参，无返回值 jack
+       ()
+        */
+       println(f3("jack"))
+   
+   
+       println("====================")
+   
+       // 4. 函数4：有参，有返回值
+       def f4(name: String): Unit = {
+         println("4：有参，有返回值 " + name)
+         return "hi, " + name
+       }
+   
+       /*
+       4：有参，有返回值 tom
+       ()
+        */
+       println(f4("tom"))
+       println("====================")
+   
+       // 5. 函数5：多参，无返回值
+       def f5(name1: String, name2: String): Unit = {
+         println("5：多参，无返回值")
+         println(s"${name1}和${name2}都是我的好朋友")
+       }
+   
+       /*
+       5：多参，无返回值
+       lee和chen都是我的好朋友
+        */
+       f5("lee", "chen")
+       println("====================")
+   
+   
+       // 6. 函数6：多参，有返回值
+       def f6(a: Int, b: Int): Int = {
+         println("6：多参，有返回值")
+         return a + b
+       }
+   
+       /*
+       6：多参，有返回值
+       33
+        */
+       println(f6(11, 22))
+     }
+   
+   }
+   ```
+   
+   
+
+### 函数参数
+
+1. 案例实操
+
+   1. 可变参数
+   2. 如果参数列表中存在多个参数，那么可变参数一般放置在最后
+   3. 参数默认值，一般将有默认值的参数放置在参数列表的后面
+   4. 带名参数
+
+   ```scala
+   package com.scala.chapter05
+   
+   object Test03_FunctionParameter {
+   
+     def main(args: Array[String]): Unit = {
+       // 1. 可变参数
+       def f1(str: String*): Unit = {
+         println(str)
+       }
+   
+       f1("jack") //ArraySeq(jack)
+       f1("aaa", "bbb", "ccc") //ArraySeq(aaa, bbb, ccc)
+       println("==============================")
+   
+   
+       // 2. 如果参数列表中存在多个参数，那么可变参数一般放置在最后
+       def f2(str1: String, str2: String*): Unit = {
+         println("str1:" + str1 + " str2:" + str2)
+       }
+   
+       f2("tom") //str1:tom str2:List()
+       f2("aaa", "bbb", "ccc") //str1:aaa str2:ArraySeq(bbb, ccc)
+   
+       println("==============================")
+   
+   
+       //3 . 数默认值，一般将有默认值的参数放置在参数列表的后面
+       def f3(name: String = "sanshang"): Unit = {
+         println("My name is " + name)
+       }
+   
+       f3("julia") //My name is julia
+       f3() //My name is sanshang
+   
+       println("==============================")
+   
+       //4. 带名参数
+       def f4(name: String = "sanshang", age: Int): Unit = {
+         println(s"${age} old ${name} learning at school")
+       }
+   
+       f4("marry", 18) //18 old marry learning at school
+       f4(age = 11, name = "karry") //11 old karry learning at school
+       f4(age = 19) //19 old sanshang learning at school
+   
+     }
+   
+   }
+   ```
+   
+   
+
+### 函数至简原则（重点）
+
+函数至简原则：能省则省
+
+1. 至简原则细节
+
+   1. return 可以省略，Scala 会使用函数体的最后一行代码作为返回值
+   2. 如果函数体只有一行代码，可以省略花括号
+   3. 返回值类型如果能够推断出来，那么可以省略（:和返回值类型一起省略）
+   4. 如果有 return，则不能省略返回值类型，必须指定
+   5. 如果函数明确声明 unit，那么即使函数体中使用 return 关键字也不起作用
+   6. Scala 如果期望是无返回值类型，可以省略等号
+   7. 如果函数无参，但是声明了参数列表，那么调用时，小括号，可加可不加
+   8. 如果函数没有参数列表，那么小括号可以省略，调用时小括号必须省略
+   9. 如果不关心名称，只关心逻辑处理，那么函数名（def）可以省略
+
+2. 实例操作
+
+   ```scala
+   package com.scala.chapter05
+   
+   
+   object Test04_Simplify {
+   
+     def main(args: Array[String]): Unit = {
+   
+       // 0.函数标准写法
+       def f0(name: String): Unit = {
+         return name
+       }
+   
+       println(f0("jack")) //()
+   
+       println("==========================")
+   
+       // 函数至简原则
+       // 2. return可以省略，Scala会使用函数体的最后一行代码作为返回值
+       def f1(name: String): Unit = {
+         name
+       }
+   
+       println(f0("jack")) //()
+       println("==========================")
+   
+       //2. 如果函数体只有一行代码，可以省略花括号
+       def f2(name: String): String = name
+   
+       println(f2("jack")) //jack
+       println("==========================")
+   
+       //3. 返回值类型如果能够推断出来，那么可以省略（:和返回值类型一起省略）
+       def f3(name: String) = name
+   
+       println(f3("jack")) //jack
+       println("==========================")
+   
+       // 4. 如果有return，则不能省略返回值类型，必须指定
+       // 下面是error的必须有返回类型
+       /*    def f4(name: String) = {
+             return name
+           }
+   
+           println(f4("jack"))*/
+   
+       println("==========================")
+   
+       // 5. 如果函数明确声明unit，那么即使函数体中使用return关键字也不起作用
+       def f5(name: String): Unit = {
+         return name
+       }
+   
+       println(f5("jack")) //()
+       println("==========================")
+   
+       // 6. Scala如果期望是无返回值类型，可以省略等号
+       def f6(name: String) {
+         println(name)
+       }
+   
+       /*
+       jack
+       ()
+        */
+       println(f6("jack"))
+       println("==========================")
+   
+       // 7. 如果函数无参，但是声明了参数列表，那么调用时，小括号，可加可不加
+       def f7(): Unit = {
+         println("hello world")
+       }
+   
+       f7() //hello world
+       f7 //hello world
+   
+       println("==========================")
+   
+       // 8. 如果函数没有参数列表，那么小括号可以省略，调用时小括号必须省略
+       def f8: Unit = {
+         println("hello ")
+       }
+   
+       //f8()
+       f8 //hello
+       println("==========================")
+   
+   
+       //9. 如果不关心名称，只关心逻辑处理，那么函数名（def）可以省略
+       def f9(name: String): Unit = {
+         println(name)
+       }
+   
+       def f10 = (name: String) => println(name)
+   
+       f10("tom") //tom
+   
+   
+     }
+   
+   }
+   
+   ```
+
+## 函数高级
+
+### 高阶函数
+
+在 Scala 中，函数是一等公民。怎么体现的呢？
+
+对于一个函数我们可以：**定义函数、调用函数**
+
+```scala
+package com.scala.chapter05
+
+object Test06_HighOrderFunction {
+
+  def main(args: Array[String]): Unit = {
+    // 定义函数
+    def f(n: Int): Int = {
+      println("f 调用")
+      n + 1
+    }
+
+    // 调用函数
+    val result: Int = f(123) //f 调用
+    println(result) //124
+  }
+}
+```
+
+但是其实函数还有更高阶的用法
+
+1. 函数可以作为值进行传递
+
+   ```scala
+   package com.scala.chapter05
+   
+   object Test06_HighOrderFunction {
+   
+     def main(args: Array[String]): Unit = {
+       // 定义函数
+       def f(n: Int): Int = {
+         println("f 调用")
+         n + 1
+       }
+   
+       // 调用函数
+       val result: Int = f(123) //f 调用
+       println(result) //124
+   
+       println("=============================")
+   
+       // 1. 函数作为值进行传递
+       val f1: Int => Int = f
+       val result2 = f1(234) //f 调用
+       println(result2) //235
+   
+       println("----------------------")
+   
+       //2. 在被调用函数 foo 后面加上 _，相当于把函数 foo 当成一个整体， 传递给变量 f1
+       val f2 = f _
+       val result3 = f2(345) //f 调用
+       println(result3) //346
+   
+       //3. 如果明确变量类型，那么不使用下划线也可以将函数作为整体传递给 变量
+       def fun(): Int = {
+         println("fun 调用")
+         2
+       }
+   
+       val f3: () => Int = fun
+       println(f3()) //2
+       println("----------------------")
+   
+       val result4 = fun _
+       println(result4) //com.scala.chapter05.Test06_HighOrderFunction$$$Lambda$21/0x0000000801096390@39ba5a14
+   
+     }
+   
+   }
+   
+   ```
+
+2. 函数可以作为参数进行传递
+
+   ```scala
+   package com.scala.chapter05
+   
+   object Test06_HighOrderFunction {
+   
+     def main(args: Array[String]): Unit = {
+       // 2. 函数作为参数进行传递
+       // 定义二元计算函数
+       //定义一个函数，函数参数还是一个函数签名；op 表示函数名称;(Int,Int) 表示输入两个 Int 参数；Int 表示函数返回值
+       def dualEval(op: (Int, Int) => Int, a: Int, b: Int): Int = {
+         op(a, b)
+       }
+   
+       //定义一个函数，参数和返回值类型和 dualEval 的输入参数一致
+       def add(a: Int, b: Int): Int = {
+         a + b
+       }
+   
+       //将 add 函数作为参数传递给 f1 函数，如果能够推断出来不是调用，_ 可以省略
+       println(dualEval(add, 11, 22)) //33
+       println(dualEval((a, b) => a + b, 11, 33)) //44
+       println(dualEval(_ + _, 22, 44)) //66
+   
+       // 可以传递匿名函数
+   
+     }
+   
+   }
+   ```
+
+3. 函数可以作为函数返回值返回
+
+   ```scala
+   package com.scala.chapter05
+   
+   object Test06_HighOrderFunction {
+   
+     def main(args: Array[String]): Unit = {
+       // 3. 函数作为函数的返回值返回
+       def f5(): Int => Unit = {
+         def f6(a: Int): Unit = {
+           println("f6调用 : " + a)
+         }
+   
+         f6 // 将函数直接返回
+       }
+   
+       // 因为 f5 函数的返回值依然为函数，所以可以变量 f6 可以作为函数继续调用
+       val f6 = f5()
+       println(f6) //com.scala.chapter05.Test06_HighOrderFunction$$$Lambda$24/0x00000008010965e0@17c68925
+       f6(66) //f6调用 : 66
+       println("----------------------")
+   
+       // 上面的代码可以简化为
+       /*
+       f6调用 : 77
+       ()
+        */
+       println(f5()(77))
+   
+     }
+   
+   }
+   ```
+
+### 匿名函数
+
+1. 说明
+
+   没有名字的函数就是匿名函数。
+
+   ```
+   (x:Int)=>{函数体}
+   x：表示输入参数类型；Int：表示输入参数类型；函数体：表示具体代码逻辑
+   ```
+
+2. 实例操作
+
+   需求 1：传递的函数有一个参数
+
+   传递匿名函数至简原则：
+
+   1. **参数的类型可以省略，会根据形参进行自动的推导**
+   2. **类型省略之后，发现只有一个参数，则圆括号可以省略；其他情况：没有参数和参 数超过 1 的永远不能省略圆括号**
+   3. **匿名函数如果只有一行，则大括号也可以省略**
+   4. **如果参数只出现一次，则参数省略且后面参数可以用_代替**
+
+   ```scala
+   package com.scala.chapter05
+   
+   object Test05_Lambda {
+   
+     def main(args: Array[String]): Unit = {
+   
+   
+       val fun = (name: String) => {
+         println(name)
+       }
+   
+       fun("hello") //hello
+   
+       println("========================")
+   
+       // 定义一个函数，以函数作为参数输入
+       def f(func: String => Unit): Unit = {
+         println("hello world")
+       }
+   
+       f(fun) //hello world
+   
+       // 下面输出结果与上相同,把函数作为参数直接传入
+       f((name: String) => {
+         println(name) //hello world
+       })
+   
+       println("========================")
+   
+       // 匿名函数的简化原则
+       // 1. 参数的类型可以省略，会根据形参进行自动的推导
+       f((name) => {
+         println(name) //hello world
+       })
+       println("========================")
+   
+       //2. 类型省略之后，发现只有一个参数，则圆括号可以省略；其他情况：没有参数和参数超过1的永远不能省略圆括号。
+       f(name => {
+         println(name)
+       })
+   
+       println("========================")
+       // 3. 匿名函数如果只有一行，则大括号也可以省略
+       f(name => println(name)) //hello world
+   
+       println("========================")
+   
+       // 4. 如果参数只出现一次，则参数省略且后面参数可以用_代替
+       f(println(_)) //hello world
+   
+       println("========================")
+       // 5. 如果可以推断出，当前传入的println是一个函数体，而不是调用语句，可以直接省略下划线
+       f(println) //hello world
+   
+     }
+   
+   }
+   
+   ```
+
+   需求 2：传递的函数有两个参数
+
+   ```scala
+   package com.scala.chapter05
+   
+   object Test05_Lambda {
+   
+     def main(args: Array[String]): Unit = {
+   
+       // 实际示例，定义一个”二元运算“函数，只操作1和2两个数，但是具体运算通过参数传入
+       def dualFunctionOneAndTwo(function: (Int, Int) => Int): Int = {
+         function(1, 2)
+       }
+   
+       val add = (a: Int, b: Int) => a + b
+       val minus = (a: Int, b: Int) => a - b
+   
+   
+       println(dualFunctionOneAndTwo(add)) //3
+       println(dualFunctionOneAndTwo(minus)) //-1
+   
+       // 匿名函数简化
+       println("---------------------")
+       println(dualFunctionOneAndTwo((a: Int, b: Int) => a + b))
+       println(dualFunctionOneAndTwo((a: Int, b: Int) => a - b))
+   
+       println("---------------------")
+       //如下继续简化
+       println(dualFunctionOneAndTwo((a, b) => a + b)) //3
+   
+       println("---------------------")
+       // 继续优化
+       println(dualFunctionOneAndTwo(_ + _)) //3
+       println(dualFunctionOneAndTwo(_ - _)) //-1
+   
+       println("---------------------")
+   
+       // 当第二参数减第一参数时,如下
+       println(dualFunctionOneAndTwo((a, b) => b - a)) //1
+       println(dualFunctionOneAndTwo(-_ + _)) //1
+     }
+   
+   }
+   
+   ```
+
+3. 扩展练习
+
+   练习 1：定义一个匿名函数，并将它作为值赋给变量 fun。函数有三个参数，类型分别为 Int，String，Char，返回值类型为 Boolean
+
+   要求调用函数 fun(0, “”, ‘0’)得到返回值为 false，其它情况均返回 true。
+
+   ```scala
+       val fun = (i: Int, s: String, c: Char) => {
+         if (i == 0 && s == "" && c == '0') false else true
+       }
+   
+       println(fun(0, "", 0)) //true
+       println(fun(0, "", '1')) //true
+       println(fun(23, "", '0')) //true
+       println(fun(0, "hello", '0')) //true
+       println(fun(0, "", '0')) //false
+   ```
+   
+   练习 2： 定义一个函数 func，它接收一个 Int 类型的参数，返回一个函数（记作 f1）。 它返回的函数 f1，接收一个 String 类型的参数，同样返回一个函数（记作 f2）。函数 f2 接 收一个 Char 类型的参数，返回一个 Boolean 的值。 
+   
+   要求调用函数 func(0) (“”) (‘0’)得到返回值为 false，其它情况均返回 true
+   
+   ```scala
+       def func(i: Int): String => (Char => Boolean) = {
+         def f1(s: String): Char => Boolean = {
+           def f2(c: Char): Boolean = {
+             if (i == 0 && s == "" && c == '0') false else true
+           }
+   
+           f2
+         }
+   
+         f1
+       }
+   
+       println(func(0)("")('0')) //false
+       println(func(0)("")('1')) //true
+       println(func(23)("")('0')) //true
+       println(func(0)("hello")('0')) //true
+   
+       println("------------------------------")
+   
+       // 匿名函数简写
+       def func1(i: Int): String => (Char => Boolean) = {
+         s => c => if (i == 0 && s == "" && c == '0') false else true
+       }
+   
+       println(func1(0)("")('0')) //false
+       println(func1(0)("")('1')) //true
+       println(func1(23)("")('0')) //true
+       println(func1(0)("hello")('0')) //true
+   
+       println("------------------------------")
+   
+       // 柯里化
+       def func2(i: Int)(s: String)(c: Char): Boolean = {
+         if (i == 0 && s == "" && c == '0') false else true
+       }
+   
+       println(func2(0)("")('0')) //false
+       println(func2(0)("")('1')) //true
+       println(func2(23)("")('0')) //true
+       println(func2(0)("hello")('0')) //true
+   
+   ```
+
+### 高阶函数案例
+
+需求：模拟 Map 映射、Filter 过滤、Reduce 聚合
+
+```scala
+package com.scala.chapter05
+
+import scala.collection.mutable.ArrayBuffer
+
+
+object Test07_Practice_CollectionOperation {
+
+  def main(args: Array[String]): Unit = {
+
+    val arr: Array[Int] = Array(11, 22, 33, 44, 55, 66)
+
+    // 对数组进行处理，将操作抽象出来，处理完毕之后的结果返回一个新的数组
+    def arrayOperation(array: Array[Int], op: Int => Int): Array[Int] = {
+      for (elem <- array) yield op(elem)
+    }
+
+    // 定义一个加一操作
+    def addOne(elem: Int): Int = {
+      elem + 1
+    }
+
+    //调用函数
+    val newArray: Array[Int] = arrayOperation(arr, addOne)
+    println(newArray.mkString(",")) //12,23,34,45,56,67
+
+    println("---------------------")
+
+    // 传入匿名函数，实现元素翻倍
+    val newArray2 = arrayOperation(arr, _ * 2)
+    println(newArray2.mkString(",")) //22,44,66,88,110,132
+
+    println("===================")
+
+    //1 .Map映射
+    def map(arr: Array[Int], op: Int => Int) = {
+      for (elem <- arr) yield op(elem)
+    }
+
+    val mapArr = map(Array(1, 2, 3, 4, 5), (x: Int) => {
+      x * x
+    })
+
+    println(mapArr.mkString(","))
+    println("===================")
+
+    // 2. filter 过滤。有参数，且参数再后面只使用一次，则参数省略且 后面参数用_表示
+    def filter(arr: Array[Int], op: Int => Boolean) = {
+      var arr1: ArrayBuffer[Int] = ArrayBuffer[Int]()
+      for (elem <- arr if op(elem)) {
+        arr1.append(elem)
+      }
+      arr1.toArray
+    }
+
+    var arr1 = filter(Array(1, 2, 3, 4), _ % 2 == 1)
+    println(arr1.mkString(",")) //1,3
+
+    println("======================")
+
+    //3. reduce 聚合。有多个参数，且每个参数再后面只使用一次，则参数省略且后面参数用_表示，第 n 个_代表第 n 个参数
+    def reduce(arr: Array[Int], op: (Int, Int) => Int) = {
+      var init: Int = arr(0)
+      for (elem <- 1 to arr.length) {
+        init = op(init, elem)
+      }
+      init
+    }
+
+    val arr2 = reduce(Array(1, 2, 3, 4), (x, y) => x * y)
+    println(arr2) //24
+    val arr3 = reduce(Array(1, 2, 3, 4), _ * _)
+    println(arr3) //24
+  }
+
+}
+```
+
+### 函数柯里化&闭包
+
+闭包：函数式编程的标配
+
+1. 说明
+
+   - 闭包：如果一个函数，访问到了它的外部（局部）变量的值，那么这个函数和他所处的 环境，称为闭包
+   - 函数柯里化：把一个参数列表的多个参数，变成多个参数列表。
+
+2. 实例
+
+   闭包
+
+   ```scala
+   package com.scala.chapter05
+   
+   object Test09_ClosureAndCurrying {
+   
+     def main(args: Array[String]): Unit = {
+       def add(a: Int, b: Int): Int = {
+         a + b
+       }
+   
+   
+       // 1. 考虑固定一个加数的场景
+       def addByFour(b: Int): Int = {
+         4 + b
+       }
+   
+       // 2. 扩展固定加数改变的情况
+       def addByFive(b: Int): Int = {
+         5 + b
+       }
+   
+       // 3. 将固定加数作为另一个参数传入，但是是作为”第一层参数“传入
+       def addByFour1(): Int => Int = {
+         val a = 4
+   
+         def addB(b: Int): Int = {
+           a + b
+         }
+   
+         addB
+       }
+   
+       // 下面修改为参数a为也可作为传参
+       def addByA(a: Int): Int => Int = {
+         def addB(b: Int): Int = {
+           a + b
+         }
+   
+         addB
+       }
+   
+       println(addByA(11)(22)) //33
+   
+      // 在调用时，f1 函数执行完毕后，局部变量 a 应该随着栈空间释放掉
+       val addByFour2 = addByA(11)
+       val addByFive2 = addByA(22)
+   
+       println(addByFour2(22)) //33
+       println(addByFive2(33)) //55
+   
+     }
+   
+   
+   }
+   
+   ```
+
+   柯里化
+
+   ```scala
+   package com.scala.chapter05
+   
+   object Test09_ClosureAndCurrying {
+   
+     def main(args: Array[String]): Unit = {
+       // 4. lambda表达式简写
+       def addByA1(a: Int): Int => Int = {
+         (b: Int) => {
+           a + b
+         }
+       }
+   
+       // 下面继续优化,可以简写为
+       def addByA2(a: Int): Int => Int = {
+         b => a + b
+       }
+   
+       // 续优化,可以简写为
+       def addByA3(a: Int): Int => Int = a + _
+   
+       val addByFour3 = addByA3(11)
+       val addByFive3 = addByA3(22)
+   
+       println(addByFour3(22)) //33
+       println(addByFive3(33)) //55
+   
+       println("============================")
+   
+       // 5. 柯里化
+       def addCurrying(a: Int)(b: Int): Int = {
+         a + b
+       }
+   
+       println(addCurrying(11)(22)) //33
+   
+     }
+   }
+   ```
+
+### 递归
+
+1. 说明
+
+   一个函数/方法在函数/方法体内又调用了本身，我们称之为递归调用
+
+2. 实例操作
+
+   ```scala
+   package com.scala.chapter05
+   
+   import scala.annotation.tailrec
+   
+   object Test10_Recursion {
+   
+     def main(args: Array[String]): Unit = {
+       println(fact(5)) //120
+   
+       println(tailFact(5)) //120
+     }
+   
+     // 阶乘
+     // 递归算法
+     // 1) 方法调用自身
+     // 2) 方法必须要有跳出的逻辑
+     // 3) 方法调用自身时，传递的参数应该有规律
+     // 4) scala 中的递归必须声明函数返回值类型
+     
+     // 递归实现计算阶乘
+     def fact(n: Int): Int = {
+       if (n == 0) return 1
+       fact(n - 1) * n
+     }
+   
+     /*
+     递归缺点就是不断在栈空间里创建函数,造成内存资源浪费,直到return才会进行销毁
+     尾递归解决了内存资源浪费的问题,把每次的计算结果直接存在变量里,计算完可直接销毁方法线空间的内存
+      */
+     // 尾递归实现
+     def tailFact(n: Int): Int = {
+       //尾递归特有的注解,只在尾递归函数里才会有作用
+       @tailrec
+       def loop(n: Int, currRes: Int): Int = {
+         if (n == 0) return currRes
+         loop(n - 1, currRes * n)
+       }
+   
+       loop(n, 1)
+     }
+   }
+   
+   ```
+   
+
+### 控制抽象
+
+1. 值调用：把计算后的值传递过去
+
+   ```scala
+   package com.scala.chapter05
+   
+   object Test11_ControlAbstraction {
+   
+     def main(args: Array[String]): Unit = {
+       //1. 传值参数
+       def f0(a: Int): Unit = {
+   
+         println("a: " + a)
+         println("b: " + a)
+       }
+   
+       /*
+       a: 11
+       b: 11
+        */
+       f0(11)
+       println("------------------------")
+   
+       def f1(): Int = {
+         println("f1调用")
+         22
+       }
+   
+       /*
+       f1调用
+       a: 22
+       b: 22
+        */
+       f0(f1())
+   
+     }
+   
+   }
+   
+   ```
+
+2. 名调用：把代码传递过去
+
+   ```scala
+   
+   package com.scala.chapter05
+   
+   object Test11_ControlAbstraction {
+   
+     def main(args: Array[String]): Unit = {
+       // 2. 传名参数，传递的不再是具体的值，而是代码块
+       def f2(a: => Int): Unit = { //注意这里变量 a 没有小括号了
+         println("a: " + a)
+         println("a: " + a)
+       }
+   
+       /*
+       a: 23
+       a: 23
+        */
+       f2(23)
+       println("----------------------------")
+   
+       /*
+       f1调用
+       a: 22
+       f1调用
+       a: 22
+        */
+       f2(f1())
+     }
+   
+   }
+   
+   ```
+
+   > **注意：Java 只有值调用；Scala 既有值调用，又有名调用**
+
+3. 实例操作
+
+   ```scala
+   package com.scala.chapter05
+   
+   object Test11_ControlAbstraction {
+   
+     def main(args: Array[String]): Unit = {
+       // 1.传递代码块
+       //上面也可以简化如下
+       /*
+       this is code block
+       a: 33
+       this is code block
+       a: 33
+        */
+       f2({
+         println("this is code block")
+         33
+       })
+   
+       println("----------------------------")
+       //2. 小括号可以省略
+       /*
+       this is code block
+       a: 44
+       this is code block
+       a: 44
+        */
+       f2 {
+         println("this is code block")
+         44
+       }
+   
+     }
+   
+   }
+   
+   ```
+   
+   自定义一个 While 循环
+   
+   ```scala
+   package com.scala.chapter05
+   
+   object Test12_MyWhile {
+     def main(args: Array[String]): Unit = {
+       var n = 10
+       // 1. 常规的while循环
+       while (n >= 1) {
+         println(n)
+         n -= 1
+       }
+   
+       // 2. 用闭包实现一个函数，将代码块作为参数传入，递归调用
+       def myWhile(condition: => Boolean): (=> Unit) => Unit = {
+   
+         def doLoop(op: => Unit): Unit = {
+           if (condition) {
+             op
+             myWhile(condition)(op)
+           }
+   
+         }
+   
+         doLoop _
+       }
+   
+   
+       println("=================")
+       n = 10
+       myWhile(n >= 1) {
+         println(n)
+         n -= 1
+       }
+   
+       println("=================")
+   
+       // 3. 用匿名函数实现
+       def myWhile2(condition: => Boolean): (=> Unit) => Unit = {
+         // 内层函数需要递归调用，参数就是循环体
+         op => {
+           if (condition) {
+             op
+             myWhile2(condition)(op)
+           }
+         }
+       }
+   
+       n = 10
+       myWhile2(n >= 1) {
+         println(n)
+         n -= 1
+       }
+   
+       println("=================")
+   
+       // 4. 用柯里化实现
+       def myWhile3(condition: => Boolean)(op: => Unit): Unit = {
+         if (condition) {
+           op
+           myWhile3(condition)(op)
+         }
+   
+       }
+   
+       n = 10
+       myWhile3(n >= 1) {
+         println(n)
+         n -= 1
+       }
+   
+     }
+   }
+   ```
+
+### 惰性加载
+
+1. 说明
+
+   当函数返回值被声明为 lazy 时，函数的执行将被推迟，直到我们首次对此取值，该函数才会执行。这种函数我们称之为惰性函数
+
+2. 实例操作
+
+   ```scala
+   package com.scala.chapter05
+   
+   object Test13_Lazy {
+   
+     def main(args: Array[String]): Unit = {
+   
+       val result: Int = sum(11, 22)
+   
+       /*
+       3. sum调用
+       1. 函数调用
+       2. result = 33
+       4. result = 33
+        */
+       println("1. 函数调用")
+       println("2. result = " + result)
+       println("4. result = " + result)
+   
+       println("======================")
+   
+       lazy val result2: Int = sum(11, 22)
+   
+       /*
+       1. 函数调用
+       3. sum调用
+       2. result = 33
+       4. result = 33
+        */
+       println("1. 函数调用")
+       println("2. result = " + result2)
+       println("4. result = " + result2)
+     }
+   
+     def sum(a: Int, b: Int): Int = {
+       println("3. sum调用")
+       a + b
+     }
+   }
+   ```
+   
+   > **注意：lazy 不能修饰 var 类型的变量**
+
+
+
+------
+
+# 第六章 面向对象
+
+Scala 的面向对象思想和 Java 的面向对象思想和概念是一致的。 
+
+Scala 中语法和 Java 不同，补充了更多的功能
+
+## Scala 包
+
+1. 基本语法
+
+   ```
+   package 包名
+   ```
+
+2. Scala 包的三大作用（和 Java 一样）
+
+   1. 区分相同名字的类
+   2. 当类很多时，可以很好的管理类
+   3. 控制访问范围
+
+### 包的命名
+
+1. 命名规则
+
+   只能包含数字、字母、下划线、小圆点.，但不能用数字开头，也不要使用关键字
+
+2. 实例操作
+
+   ```
+   demo.class.exec1 //错误，因为 class 关键字
+   demo.12a //错误，数字开头
+   ```
+
+3. 命名规范
+
+   一般是小写字母+小圆点
+
+   ```
+   com.公司名.项目名.业务模块名
+   ```
+
+4. 实例操作
+
+   ```scala
+   
+   ```
+
+
+
+###  包说明（包语句）
+
+1. 说明
+
+   Scala 有两种包的管理风格，一种方式和 Java 的包管理风格相同，每个源文件一个包（包 名和源文件所在路径不要求必须一致），包名用“.”进行分隔以表示包的层级关系，如 com.atguigu.scala。另一种风格，通过嵌套的风格表示层级关系，如下
+
+   ```scala
+   
+   ```
+
+   第二种风格有以下特点
+
+   1. 一个源文件中可以声明多个 package
+   2. 子包中的类可以直接访问父包中的内容，而无需导包
+
+2. 实例操作
+
+   ```scala
+   
+   ```
+
+   
+
+### 包对象
+
+在 Scala 中可以为每个包定义一个同名的包对象，定义在包对象中的成员，作为其对 应包下所有 class 和 object 的共享变量，可以被直接访问。
+
+1. 定义
+
+   ```scala
+   
+   ```
+
+   
+
+2. 说明
+
+   1. 若使用 Java 的包管理风格，则包对象一般定义在其对应包下的 package.scala 文件中，包对象名与包名保持一致
+
+      ![](http://www.dxb02.top/photos/scala/04.jpg)
+
+   2. 如采用嵌套方式管理包，则包对象可与包定义在同一文件中，但是要保证包对象 与包声明在同一作用域中
+
+      ```scala
+      
+      ```
+
+
+
+
+
+### 导包说明
+
+1. 和 Java 一样，可以在顶部使用 import 导入，在这个文件中的所有类都可以使用
+
+2. 局部导入：什么时候使用，什么时候导入。**在其作用范围内都可以使用**
+
+3. 通配符导入：`import java.util._`
+
+4. 给类起名：`import java.util.{ArrayList=>JL}`
+
+5. 导入相同包的多个类：`import java.util.{HashSet, ArrayList}`
+
+6. 屏蔽类：`import java.util.{ArrayList =>_,_}`
+
+7. 导入包的绝对路径：`new _root_.java.util.HashMap`
+
+   ```scala
+   
+   ```
+
+说明
+
+
+
+| `import com.atguigu.Fruit`              | 引入 com.atguigu 包下 Fruit（class 和 object）              |
+| --------------------------------------- | ----------------------------------------------------------- |
+| `import com.atguigu._ `                 | 引入 com.atguigu 下的所有成员                               |
+| `import com.atguigu.Fruit._ `           | 引入 Fruit(object)的所有成员                                |
+| `import com.atguigu.{Fruit,Vegetable}`  | 引入 com.atguigu 下的 Fruit 和 Vegetable                    |
+| `import com.atguigu.{Fruit=>Shuiguo}`   | 引入 com.atguigu 包下的 Fruit 并更名为 Shuiguo              |
+| `import com.atguigu.{Fruit=>Shuiguo,_}` | 引入 com.atguigu 包下的所有成员，并将 Fruit 更名 为 Shuiguo |
+| `import com.atguigu.{Fruit=>_,_} `      | 引入 com.atguigu 包下屏蔽 Fruit 类                          |
+| `new _root_.java.util.HashMap`          | 引入的 Java 的绝对路径                                      |
+
+> 注意
+>
+> Scala 中的三个默认导入分别是
+>
+> ```scala
+> import java.lang._
+> import scala._
+> import scala.Predef._
+> ```
+
+
+
+
+
+## 类和对象
+
+- 类: 可以看成一个模板
+- 对象: ：表示具体的事物
+
+### 定义类
+
+0. 回顾：Java 中的类
+
+   如果类是 public 的，则必须和文件名一致。
+
+   一般，一个.java 有一个 public 类
+
+   > **注意：Scala 中没有 public，一个.scala 中可以写多个类。**
+
+1. 基本语法
+
+   ```
+   [修饰符] class 类名 {
+    	类体
+   } 
+   ```
+
+   说明
+
+   1. Scala 语法中，类并不声明为 public，所有这些类都具有公有可见性（即默认就是 public）
+   2. 一个 Scala 源文件可以包含多个类
+
+2. 实例操作
+
+   ```scala
+   
+   ```
+
+### 属性
+
+属性是类的一个组成部分
+
+1. 基本语法
+
+   ```
+   [修饰符] var|val 属性名称 [：类型] = 属性值
+   ```
+
+   > 注：Bean 属性（@BeanPropetry），可以自动生成规范的 setXxx/getXxx 方法
+
+2. 实例操作
+
+   ```scala
+   
+   ```
+
+
+
+
+## 封装
+
+封装就是把抽象出的数据和对数据的操作封装在一起，数据被保护在内部，程序的其它 部分只有通过被授权的操作（成员方法），才能对数据进行操作。Java 封装操作如下，
+
+1. 将属性进行私有化
+2. 提供一个公共的 set 方法，用于对属性赋值
+3. 提供一个公共的 get 方法，用于获取属性的值
+
+Scala 中的 public 属性，底层实际为 private，并通过 get 方法（obj.field()）和 set 方法 （obj.field_=(value)）对其进行操作。所以 Scala 并不推荐将属性设为 private，再为其设置 public 的 get 和 set 方法的做法。但由于很多 Java 框架都利用反射调用 getXXX 和 setXXX 方 法，有时候为了和这些框架兼容，也会为 Scala 的属性设置 getXXX 和 setXXX 方法（通过 @BeanProperty 注解实现）。
+
+### 访问权限
+
+1. 说明
+
+2. 实例操作
+
+   ```scala
+   
+   ```
+
+   
