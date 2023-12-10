@@ -3563,19 +3563,23 @@ Scala 中语法和 Java 不同，补充了更多的功能
 4. 实例操作
 
    ```scala
-   
+   com.scala.oa.model
+   com.scala.oa.controller
+   com.sohu.bank.order
    ```
-
-
 
 ###  包说明（包语句）
 
 1. 说明
 
-   Scala 有两种包的管理风格，一种方式和 Java 的包管理风格相同，每个源文件一个包（包 名和源文件所在路径不要求必须一致），包名用“.”进行分隔以表示包的层级关系，如 com.atguigu.scala。另一种风格，通过嵌套的风格表示层级关系，如下
+   Scala 有两种包的管理风格，一种方式和 Java 的包管理风格相同，每个源文件一个包（包名和源文件所在路径不要求必须一致），包名用“.”进行分隔以表示包的层级关系，如 `com.company.scala`。另一种风格，通过嵌套的风格表示层级关系，如下
 
    ```scala
-   
+   package com{
+       package company{
+           package scala
+       }
+   }
    ```
 
    第二种风格有以下特点
@@ -3586,22 +3590,83 @@ Scala 中语法和 Java 不同，补充了更多的功能
 2. 实例操作
 
    ```scala
+   package com {
    
+     import com.company.scala.Inner //父包访问子包需要导包
+   
+     // 在外层包中定义单例对象
+     object Outer {
+       var out: String = "out"
+   
+       def main(args: Array[String]): Unit = {
+         println(Inner.in) //in
+       }
+     }
+   
+     package company {
+       package scala {
+         // 内层包中定义单例对象
+         object Inner {
+           var in: String = "in"
+   
+           def main(args: Array[String]): Unit = {
+             println(Outer.out) //out
+             Outer.out = "outter"
+   
+             //子包访问父包无需导包
+             println(Outer.out) //outter
+           }
+         }
+       }
+   
+     }
+   
+   }
+   
+   // 在同一文件中定义不同的包
+   package aaa {
+     package bbb {
+       object Test01_Package {
+         def main(args: Array[String]): Unit = {
+   
+           import com.company.scala.Inner
+           println(Inner.in) //in
+         }
+       }
+     }
+   
+   }
    ```
-
    
 
 ### 包对象
 
-在 Scala 中可以为每个包定义一个同名的包对象，定义在包对象中的成员，作为其对 应包下所有 class 和 object 的共享变量，可以被直接访问。
+在 Scala 中可以为每个包定义一个同名的包对象，定义在包对象中的成员，作为其对应包下所有 class 和 object 的共享变量，可以被直接访问。
 
 1. 定义
 
    ```scala
+   //package.scala
+   package object chapter06 {
+     // 定义当前包共享的属性和方法
+     val commonValue = "18"
    
+     def commonMehtod() = {
+       println(s"I am ${commonValue} years old")
+     }
+   }
+   
+   //Test02_PackageObject.scala
+   package chapter06 {
+   
+     object Test02_PackageObject {
+       def main(args: Array[String]): Unit = {
+         commonMehtod()  //I am 18 years old
+         println(commonValue)  //18
+       }
+     }
+   }
    ```
-
-   
 
 2. 说明
 
@@ -3612,12 +3677,21 @@ Scala 中语法和 Java 不同，补充了更多的功能
    2. 如采用嵌套方式管理包，则包对象可与包定义在同一文件中，但是要保证包对象 与包声明在同一作用域中
 
       ```scala
+      package ccc {
+        package ddd {
+          object Test02_PackageObject {
+            def main(args: Array[String]): Unit = {
+              println(school) //dxb02
+            }
+          }
+        }
       
+      }
+      
+      package object ccc {
+        val school: String = "dxb02"
+      }
       ```
-
-
-
-
 
 ### 导包说明
 
@@ -3631,27 +3705,33 @@ Scala 中语法和 Java 不同，补充了更多的功能
 
 5. 导入相同包的多个类：`import java.util.{HashSet, ArrayList}`
 
-6. 屏蔽类：`import java.util.{ArrayList =>_,_}`
+6. 屏蔽类：`import java.util.{ArrayList =>_,_}`,`ArrayList`是要屏蔽的类,`_,_`前面是要屏蔽的参数,后面的要导入的全部类
 
-7. 导入包的绝对路径：`new _root_.java.util.HashMap`
+7. 导入包的绝对路径：`new _root_.java.util.HashMap`,一般开发中比较少用
 
    ```scala
-   
+   package java {
+       package util {
+           class HashMap{
+               
+           }
+       }
+   }
    ```
 
 说明
 
 
 
-| `import com.atguigu.Fruit`              | 引入 com.atguigu 包下 Fruit（class 和 object）              |
-| --------------------------------------- | ----------------------------------------------------------- |
-| `import com.atguigu._ `                 | 引入 com.atguigu 下的所有成员                               |
-| `import com.atguigu.Fruit._ `           | 引入 Fruit(object)的所有成员                                |
-| `import com.atguigu.{Fruit,Vegetable}`  | 引入 com.atguigu 下的 Fruit 和 Vegetable                    |
-| `import com.atguigu.{Fruit=>Shuiguo}`   | 引入 com.atguigu 包下的 Fruit 并更名为 Shuiguo              |
-| `import com.atguigu.{Fruit=>Shuiguo,_}` | 引入 com.atguigu 包下的所有成员，并将 Fruit 更名 为 Shuiguo |
-| `import com.atguigu.{Fruit=>_,_} `      | 引入 com.atguigu 包下屏蔽 Fruit 类                          |
-| `new _root_.java.util.HashMap`          | 引入的 Java 的绝对路径                                      |
+| `import com.dxb02.Fruit`              | 引入 com.dxb02包下 Fruit（class 和 object）              |
+| ------------------------------------- | -------------------------------------------------------- |
+| `import com.dxb02._ `                 | 引入 com.dxb02下的所有成员                               |
+| `import com.dxb02.Fruit._ `           | 引入 Fruit(object)的所有成员                             |
+| `import com.dxb02.{Fruit,Vegetable}`  | 引入 com.dxb02下的 Fruit 和 Vegetable                    |
+| `import com.dxb02.{Fruit=>Shuiguo}`   | 引入 com.dxb02包下的 Fruit 并更名为 Shuiguo              |
+| `import com.dxb02.{Fruit=>Shuiguo,_}` | 引入 com.dxb02包下的所有成员，并将 Fruit 更名 为 Shuiguo |
+| `import com.dxb02.{Fruit=>_,_} `      | 引入 com.dxb02包下屏蔽 Fruit 类                          |
+| `new _root_.java.util.HashMap`        | 引入的 Java 的绝对路径                                   |
 
 > 注意
 >
@@ -3662,10 +3742,6 @@ Scala 中语法和 Java 不同，补充了更多的功能
 > import scala._
 > import scala.Predef._
 > ```
-
-
-
-
 
 ## 类和对象
 
@@ -3698,7 +3774,16 @@ Scala 中语法和 Java 不同，补充了更多的功能
 2. 实例操作
 
    ```scala
+   // 1. Scala 语法中，类并不声明为 public，所有这些类都具有公有可见性（即默 认就是 public）
+   class Person {
    
+   }
+   
+   // 定义一个类
+   // 2. 一个 Scala 源文件可以包含多个类
+   class Bird {
+   
+   }
    ```
 
 ### 属性
@@ -3711,30 +3796,2087 @@ Scala 中语法和 Java 不同，补充了更多的功能
    [修饰符] var|val 属性名称 [：类型] = 属性值
    ```
 
-   > 注：Bean 属性（@BeanPropetry），可以自动生成规范的 setXxx/getXxx 方法
+   > 注：Bean 属性（`@BeanPropetry`），可以自动生成规范的 `setXxx/getXxx` 方法
 
 2. 实例操作
 
    ```scala
+   package com.scala.chapter06
    
+   import scala.beans.BeanProperty
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-05 09:32
+    * */
+   object Test03_Class {
+     def main(args: Array[String]): Unit = {
+       // 创建一个对象
+       val animal = new Bird
+       println(animal.age) //0
+       println(animal.sex) //null
+   
+       animal.sex = "female"
+       println(animal.sex) //female
+   
+     }
+   
+   }
+   
+   //1. Scala 语法中，类并不声明为 public，所有这些类都具有公有可见性（即默 认就是 public）
+   class Animal {
+   
+   }
+   
+   // 定义一个类
+   // 2. 一个 Scala 源文件可以包含多个类
+   class Bird {
+   
+     // 定义属性
+     private var name: String = "angryBird"
+   
+     //Bean 属性（@BeanProperty）
+     @BeanProperty
+     var age: Int = _   //_表示给属性一个默认值
+     //val 修饰的属性不能赋默认值，必须显示指定
+   
+     var sex: String = _
+   
+   }
    ```
-
-
 
 
 ## 封装
 
-封装就是把抽象出的数据和对数据的操作封装在一起，数据被保护在内部，程序的其它 部分只有通过被授权的操作（成员方法），才能对数据进行操作。Java 封装操作如下，
+封装就是把抽象出的**数据和对数据的操作**封装在一起，数据被保护在内部，程序的其它 部分只有通过被授权的操作（成员方法），才能对数据进行操作。Java 封装操作如下，
 
 1. 将属性进行私有化
 2. 提供一个公共的 set 方法，用于对属性赋值
 3. 提供一个公共的 get 方法，用于获取属性的值
 
-Scala 中的 public 属性，底层实际为 private，并通过 get 方法（obj.field()）和 set 方法 （obj.field_=(value)）对其进行操作。所以 Scala 并不推荐将属性设为 private，再为其设置 public 的 get 和 set 方法的做法。但由于很多 Java 框架都利用反射调用 getXXX 和 setXXX 方 法，有时候为了和这些框架兼容，也会为 Scala 的属性设置 getXXX 和 setXXX 方法（通过 @BeanProperty 注解实现）。
+Scala 中的 `public `属性，底层实际为 `private`，并通过 get 方法（`obj.field()`）和 set 方法 （`obj.field_=(value)`）对其进行操作。所以 Scala 并不推荐将属性设为 `private`，再为其设置 `public `的 `get `和 `set `方法的做法。但由于很多 Java 框架都利用反射调用 getXXX 和 setXXX 方法，有时候为了和这些框架兼容，也会为 Scala 的属性设置 getXXX 和 setXXX 方法（通过 `@BeanProperty` 注解实现）。
 
 ### 访问权限
 
 1. 说明
+
+   在 Java 中，访问权限分为：public，private，protected 和默认。在 Scala 中，你可以通过类似的修饰符达到同样的效果。但是使用上有区别
+
+   1. Scala 中属性和方法的默认访问权限为 `public`，但 Scala 中无 `public `关键字
+   2. `private `为私有权限，只在类的内部和伴生对象中可用
+   3. `protected `为受保护权限，Scala 中受保护权限比 Java 中更严格，同类、子类可以访问，同包无法访问
+   4. `private[包名]`增加包访问权限，包名下的其他类也可以使用
+
+2. 实例操作
+
+   ```scala
+   package com.scala.chapter06
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-05 09:52
+    * */
+   object Test04_ClassForAccess {
+   
+   }
+   
+   class Person {
+     private var idCard: String = "12345567"
+   
+     protected var name: String = "terry"
+   
+     var sex: String = "female"
+   
+     private[chapter06] var age: Int = 20
+   
+     def printInfo(): Unit = {
+       println(s"Person: $idCard $name $sex $age")
+     }
+   }
+   ```
+
+   ```scala
+   package com.scala.chapter06
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-05 09:51
+    * */
+   object Test04_Access {
+   
+     def main(args: Array[String]): Unit = {
+   
+       // 创建对象
+       val person: Person = new Person
+       //person.idCard //error
+       //person.name //error
+       println(person.age) //20
+       println(person.sex) //female
+   
+       person.printInfo() //Person: 12345567 terry female 20
+   
+       println("=================")
+   
+       var worker: Worker = new Worker
+   
+       worker.age = 11
+       worker.printInfo() //Worker: bob 22 male
+     }
+   
+   }
+   
+   // 定义一个子类
+   class Worker extends Person {
+     override def printInfo(): Unit = {
+   
+       //println(idCard) //error
+       name = "bob"
+       age = 22
+       sex = "male"
+       println(s"Worker: $name $age $sex")
+   
+     }
+   }
+   
+   ```
+
+   
+
+### 方法
+
+1. 基本语法
+
+   ```
+   def 方法名(参数列表) [：返回值类型] = {
+   	方法体
+   }
+   ```
+
+2. 实例操作
+
+   ```scala
+   package com.scala.chapter06
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-05 09:52
+    * */
+   object Test04_ClassForAccess {
+   
+     def main(args: Array[String]): Unit = {
+       val person = new Person
+       println(person.sum(10, 12))	//22
+     }
+   }
+   
+   
+   class Person {
+     private var idCard: String = "12345567"
+   
+     protected var name: String = "terry"
+   
+     var sex: String = "female"
+   
+     private[chapter06] var age: Int = 20
+   
+     def printInfo(): Unit = {
+       println(s"Person: $idCard $name $sex $age")
+     }
+   
+     def sum(n1: Int, n2: Int): Int = {
+       n1 + n2
+     }
+   }
+   ```
+   
+   
+
+### 创建对象
+
+1. 基本语法
+
+   ```
+   val | var 对象名 [：类型] = new 类型()
+   ```
+
+2. 实例操作
+
+   1. val 修饰对象，不能改变对象的引用（即：内存地址），可以改变对象属性的值。
+   2. var 修饰对象，可以修改对象的引用和修改对象的属性值
+   3. 自动推导变量类型不能多态，所以多态需要显示声明
+
+   ```scala
+   object Test04_ClassForAccess {
+   
+     def main(args: Array[String]): Unit = {
+       //val 修饰对象，不能改变对象的引用（即：内存地址），可以改变对象属 性的值
+       val person = new Person
+       person.sex = "male"
+       //person = new Person //error
+       println(person.sum(10, 12)) //22
+   
+     }
+   }
+   ```
+
+### 构造器
+
+和 Java 一样，Scala 构造对象也需要调用构造方法，并且可以有任意多个构造方法。
+
+Scala 类的构造器包括：**主构造器和辅助构造器**
+
+1. 基本语法
+
+   ```
+   class 类名(形参列表) { // 主构造器
+        // 类体
+        def this(形参列表) { // 辅助构造器
+        }
+        def this(形参列表) { //辅助构造器可以有多个...
+        }
+   }
+   
+   ```
+
+   说明
+
+   1. 辅助构造器，函数的名称 `this`，可以有多个，编译器通过参数的个数及类型来区分。
+   2. 辅助构造方法不能直接构建对象，必须直接或者间接调用主构造方法
+   3. **构造器调用其他另外的构造器，要求被调用构造器必须提前声明**
+
+2. 实例操作
+
+   如果主构造器无参数，小括号可省略，构建对象时调用的构造方法的小括号也可 以省略
+
+   ```scala
+   package com.scala.chapter06
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-06 09:47
+    * */
+   object Test05_Constructor {
+     def main(args: Array[String]): Unit = {
+       val stu = new Student1
+       stu.Student1()
+       /*
+       1. 主构造方法被调用
+       一般方法调用
+        */
+       println("===================")
+   
+       var stu2 = new Student1("marry")
+       /*
+       1. 主构造方法被调用
+       2. 辅助构造方法一被调用
+       name: marry age: 0
+        */
+   
+       println("===================")
+       var stu3 = new Student1("lucy", 18)
+       /*
+       1. 主构造方法被调用
+       2. 辅助构造方法一被调用
+       name: lucy age: 0
+       3. 辅助构造方法二被调用
+       name: lucy age: 18
+        */
+     }
+   }
+   
+   // 定义一个类
+   //（1）如果主构造器无参数，小括号可省略
+   //class Student1() {
+   class Student1 {
+     //定义属性
+     var name: String = _
+     var age: Int = _
+   
+     println("1. 主构造方法被调用")
+   
+     // 声明辅助构造方法
+     def this(name: String) {
+       // 辅助构造必须调用主构造器,否则无法使用
+       this() // 直接调用主构造器,
+       println("2. 辅助构造方法一被调用")
+       this.name = name
+       println(s"name: $name age: $age")
+     }
+   
+     def this(name: String, age: Int) {
+   
+       this(name)
+       println("3. 辅助构造方法二被调用")
+       this.age = age
+       println(s"name: $name age: $age")
+   
+     }
+   
+     def Student1(): Unit = {
+       println("一般方法调用")
+     }
+   
+   }
+   ```
+
+### 构造器参数
+
+1. 说明
+
+   Scala 类的主构造器函数的形参包括三种类型：未用任何修饰、var 修饰、val 修饰
+
+   1. 未用任何修饰符修饰，这个参数就是一个局部变量
+   2. var 修饰参数，作为类的成员属性使用，可以修改
+   3. val 修饰参数，作为类只读属性使用，不能修改
+
+2. 实例操作
+
+   ```scala
+   package com.scala.chapter06
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-06 14:13
+    * */
+   object Test06_ConstructorParams {
+   
+     def main(args: Array[String]): Unit = {
+   
+       var student2 = new Student2
+       student2.name = "jack"
+       student2.age = 20
+   
+       //student2: name = jack ,age = 20
+       println(s"student2: name = ${student2.name} ,age = ${student2.age}")
+   
+       println("================================")
+   
+       var student3 = new Student3("bob", 18)
+       //student3: name = bob ,age = 18
+       println(s"student3: name = ${student3.name} ,age = ${student3.age}")
+       println("================================")
+   
+       var student4 = new Student4("david", 11)
+       // student4: name = david, age = 11
+       student4.printinfo()
+       // error, 局部变量无法打印对象属性,但如果使用局部变量赋值给属性则没问题
+       //println(s"student4: name = ${student4.name}, age = ${student4.age}")
+   
+       println("================================")
+       val student5 = new Student5("king", 35)
+       //student5: name = king ,age = 35
+       println(s"student5: name = ${student5.name} ,age = ${student5.age}")
+   
+       // 构造器初始化赋值后无法再改变该对象的属性值
+       // student5.age = 44  //error
+   
+       println("================================")
+       val student6 = new Student6("lucy", 10, "scala")
+       //student6: name = lucy ,age = 10 , school = scala
+       println(s"student6: name = ${student6.name} ,age = ${student6.age} , school = ${student6.school}")
+       //student6: name = lucy, age = 10, school = scala
+       student6.printInfo()
+   
+     }
+   
+   }
+   
+   // 定义类
+   // 无参构造器
+   class Student2 {
+     // 单独定义属性
+     var name: String = _
+     var age: Int = _
+   }
+   
+   // 上面定义等价于
+   // var 修饰参数，作为类的成员属性使用，可以修改
+   class Student3(var name: String, var age: Int)
+   
+   // 主构造器参数无修饰
+   // 未用任何修饰符修饰，这个参数就是一个局部变量
+   class Student4(name: String, age: Int) {
+     def printinfo(): Unit = {
+       println(s"student4: name = $name, age = $age")
+     }
+   }
+   
+   // 下面这种局部变量的传入可以赋值给属性
+   /*
+   class Student4(_name: String, _age: Int) {
+     var name: String = _name
+     var age: Int = _age
+   }*/
+   
+   // val 修饰参数，作为类的只读属性使用，不能修改
+   class Student5(val name: String, val age: Int)
+   
+   class Student6(var name: String, var age: Int) {
+   
+     var school: String = _
+   
+     def this(name: String, age: Int, school: String) {
+       this(name, age)
+       this.school = school
+     }
+   
+     def printInfo() {
+       println(s"student6: name = ${name}, age = $age, school = $school")
+     }
+   
+   }
+   ```
+
+## 继承和多态
+
+1. 基本语法
+
+   ```
+   class 子类名 extends 父类名 { 类体 }
+   ```
+
+   1. 子类继承父类的属性和方法
+   2. scala 是单继承
+
+2. 实例操作
+
+   1. 子类继承父类的属性和方法
+   2. 继承的调用顺序：父类构造器->子类构造器
+
+   ```scala
+   package com.scala.chapter06
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-06 15:14
+    * */
+   object Test07_Inherit {
+   
+     def main(args: Array[String]): Unit = {
+       val student1: Student7 = new Student7("marry", 11)
+       student1.printInfo()
+       /*
+       1. 父类的主构造器调用
+       2. 父类的辅助构造器调用
+       3. 子类的主构造器调用
+       Student: marry 11 null
+        */
+       println("======================================")
+   
+       val student2 = new Student7("jack", 12, "scala")
+       student2.printInfo()
+       /*
+       1. 父类的主构造器调用
+       2. 父类的辅助构造器调用
+       3. 子类的主构造器调用
+       4. 子类的辅助构造器调用
+       Student: jack 12 scala
+        */
+   
+       println("======================================")
+   
+       val teacher = new Teacher
+       teacher.printInfo()
+       /*
+       1. 父类的主构造器调用
+       Teachter
+        */
+   
+       println("======================================")
+       printInfo(student1) //调用了Student类的重写方法
+       /*
+       Student: marry 11 null
+        */
+       println("--------------------------------------")
+       // Teachter
+       printInfo(teacher) //调用了Teacher类的重写方法
+       println("--------------------------------------")
+   
+       val person = new Person7
+       /*
+       1. 父类的主构造器调用
+       Person : name: null  age : 0
+        */
+       printInfo(person) //调用了父类的打印方法
+     }
+   
+     def printInfo(person: Person7): Unit = {
+       person.printInfo()
+     }
+   }
+   
+   // 定义一个父类
+   class Person7 {
+     var name: String = _
+     var age: Int = _
+   
+     println("1. 父类的主构造器调用")
+   
+     def this(name: String, age: Int) {
+       this
+       println("2. 父类的辅助构造器调用")
+       this.name = name
+       this.age = age
+   
+     }
+   
+     def printInfo(): Unit = {
+       println(s"Person : name: $name  age : $age")
+     }
+   }
+   
+   // 定义子类
+   class Student7(name: String, age: Int) extends Person7(name, age) {
+   
+     var stdNo: String = _
+     println("3. 子类的主构造器调用")
+   
+     def this(name: String, age: Int, stdNo: String) {
+       this(name, age)
+       println("4. 子类的辅助构造器调用")
+       this.stdNo = stdNo
+     }
+   
+     override def printInfo(): Unit = {
+   
+       println(s"Student: $name $age $stdNo")
+     }
+   }
+   
+   class Teacher extends Person7 {
+     override def printInfo(): Unit = {
+       println(s"Teacher")
+     }
+   }
+   ```
+
+3. 动态绑定
+
+   > **Scala 中属性和方法都是动态绑定，而 Java 中只有方法为动态绑定**
+
+   对比 Java 与 Scala 的重写
+
+   - Scala
+
+     ```scala
+     package com.scala.chapter06
+     
+     /**
+      * @program: scala
+      * @description: ${description}
+      * @author: JunWen
+      * @create: 2023-12-06 15:56
+      * */
+     object Test08_DynamicBind {
+     
+       def main(args: Array[String]): Unit = {
+     
+         val student: Student8 = new Student8
+         println(student.name) // student
+         student.hello() // hello student
+     
+         println("==========================")
+         val person: Person8 = new Student8
+         println(person.name) //student
+         person.hello() //hello student
+       }
+     
+     }
+     
+     
+     class Person8 {
+       val name: String = "person"
+     
+       def hello(): Unit = {
+         println(s"hello $name")
+       }
+     }
+     
+     class Student8 extends Person8 {
+       override val name: String = "student"
+     
+       override def hello(): Unit = {
+     
+         println(s"hello $name")
+       }
+     }
+     ```
+
+   - Java
+
+     ```java
+     package com.scala;
+     
+     /**
+      * @program: scala
+      * @description: dynamic bind
+      * @author: JunWen
+      * @create: 2023-12-06 16:00
+      **/
+     public class TestDynamicBind {
+     
+         public static void main(String[] args) {
+     
+             Worker worker = new Worker();
+             System.out.println(worker.name);    //worker
+             worker.hello(); //hello worker
+             worker.hi();    //hi worker
+     
+             System.out.println("==============================");
+     
+             // 多态
+             Person person = new Worker();
+             System.out.println(person.name);    //person    // 静态绑定属性
+             person.hello(); //hello worker  // 动态绑定方法
+             ///person.hi();     //error
+         }
+     }
+     
+     class Person {
+         String name = "person";
+     
+         public void hello() {
+             System.out.println("hello " + this.name);
+         }
+     }
+     
+     class Worker extends Person {
+         String name = "worker";
+     
+         public void hello() {
+             System.out.println("hello " + this.name);
+         }
+     
+         public void hi() {
+             System.out.println("hi " + this.name);
+         }
+     }
+     
+     ```
+
+## 抽象类
+
+### 抽像属性和抽像方法
+
+1. 基本语法
+
+   1. 定义抽象类：`abstract class Person{}` //通过 abstract 关键字标记抽象类
+   2. 定义抽象属性：`val|var name:String` //一个属性没有初始化，就是抽象属性
+   3. 定义抽象方法：`def hello():String` //只声明而没有实现的方法，就是抽象方法
+
+   ```scala
+   package com.scala.chapter06
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-06 16:08
+    * */
+   object Test09_AbstractClass {
+   
+     def main(args: Array[String]): Unit = {
+   
+       val student = new Student9
+   
+       /*
+       person eat
+       student eat
+        */
+       student.eat()
+       student.sleep() //student sleep
+     }
+   
+   }
+   
+   
+   // 定义抽象类
+   abstract class Person9 {
+     // 非抽象属性
+     var name: String = "person"
+   
+     // 抽象属性
+     var age: Int
+   
+     // 非抽象方法
+     def eat(): Unit = {
+       println("person eat")
+     }
+   
+     // 抽象方法
+     def sleep(): Unit
+   }
+   
+   // 定义具体的实现子类
+   class Student9 extends Person9 {
+     // 实现抽象属性和方法
+     var age: Int = 11
+   
+     override def sleep(): Unit = {
+       println("student sleep")
+     }
+   
+   
+     // 父类已定义是可变变量,子类重写无法改变其类型
+     //override val name: String = "student"
+     // 重写非抽象属性和方法
+     name = "student"
+   
+     override def eat(): Unit = {
+       super.eat()
+       println(s"$name eat")
+     }
+   }
+   ```
+
+   
+
+2. 继承&重写
+
+   1. 如果父类为抽象类，那么子类需要将抽象的属性和方法实现，否则子类也需声明 为抽象类
+
+   2. 重写非抽象方法需要用 `override `修饰，重写抽象方法则可以不加 `override`
+
+   3. 子类中调用父类的方法使用 `super `关键字
+
+   4. 子类对抽象属性进行实现，父类抽象属性可以用 var 修饰
+
+      子类对非抽象属性重写，父类非抽象属性只支持 val 类型，而不支持 var
+
+      > **因为 var 修饰的为可变变量，子类继承之后就可以直接使用，没有必要重写**
+
+
+
+### 匿名子类
+
+1. 说明
+
+   和 Java 一样，可以通过包含带有定义或重写的代码块的方式创建一个匿名的子类
+
+2. 实例操作
+
+   ```scala
+   package com.scala.chapter06
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-06 16:36
+    * */
+   object Test10_AnnoymousClass {
+   
+     def main(args: Array[String]): Unit = {
+   
+       val person: Person10 = new Person10 {
+         override var name: String = "jack"
+   
+         override def eat(): Unit = println(s"$name eat")
+       }
+   
+       println(person.name)  //jack
+       person.eat()  //jack eat
+     }
+   
+   }
+   
+   // 定义抽象类
+   abstract class Person10 {
+     var name: String
+   
+     def eat(): Unit
+   }
+   
+   ```
+
+## 单例对象（伴生对象）
+
+Scala语言是**完全面向对象**的语言，所以并没有静态的操作（即在Scala中没有静态的概念）。但是为了能够和Java语言交互（因为Java中有静态概念），就产生了一种特殊的对象来模拟类对象，该对象为**单例对象**。若单例对象名与类名一致，则称该单例对象这个类的**伴生对象**，这个类的所有“静态”内容都可以**放置在它的伴生对象**中声明。
+
+### 单例对象语法
+
+1. 基本语法
+
+   ```scala
+   object Person{
+   	val country:String="China"
+   }
+   ```
+
+2. 说明
+
+   1. 单例对象采用 `object `关键字声明
+   2. 单例对象对应的类称之为**伴生类**，伴生对象的名称应该和伴生类名一致
+   3. 单例对象中的属性和方法都可以通过伴生对象名（类名）直接调用访问
+
+3. 实例操作
+
+   ```scala
+   package com.scala.chapter06
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-06 16:38
+    * */
+   object Test11_Object {
+   
+     def main(args: Array[String]): Unit = {
+   
+       val student1 = new Student11("alice", 18)
+       student1.printInfo() //student: name = alice, age = 18, school = scala
+   
+       println("========================")
+       // 3. 伴生对象中的属性和方法都可以通过伴生对象名（类名）直接调用访问。
+       var student2 = Student11.newStudent("jack", 20)
+       student2.printInfo() //student: name = jack, age = 20, school = scala
+     }
+   
+   }
+   
+   
+   // 2. 伴生对象对应的类称之为伴生类，伴生对象的名称应该和伴生类名一致。
+   class Student11(val name: String, val age: Int) {
+   
+     def printInfo() {
+       println(s"student: name = ${name}, age = $age, school = ${Student11.school}")
+     }
+   }
+   
+   // 1.伴生对象采用 object 关键字声明
+   object Student11 {
+     val school: String = "scala"
+   
+     // 定义一个类的对象实例的创建方法
+     def newStudent(name: String, age: Int): Student11 = new Student11(name, age)
+   
+   
+   }
+   ```
+
+   
+
+### apply 方法
+
+1. 说明
+
+   1. 通过伴生对象的 `apply `方法，实现不使用 new 方法创建对象。
+   2. 如果想让主构造器变成私有的，可以在()之前加上 `private`
+   3. apply 方法可以重载
+   4. Scala 中 `obj(arg)`的语句实际是在调用该对象的 `apply `方法，即 `obj.apply(arg)`。用 以统一面向对象编程和函数式编程的风格。
+   5. 当使用 new 关键字构建对象时，调用的其实是类的构造方法，当直接使用类名构 建对象时，调用的其实时伴生对象的 `apply `方法
+
+2. 实例操作
+
+   ```scala
+   package com.scala.chapter06
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-06 16:38
+    * */
+   object Test11_Object {
+   
+     def main(args: Array[String]): Unit = {
+   
+       //val student1 = new Student11("alice", 18)
+       //student1.printInfo() //student: name = alice, age = 18, school = scala
+   
+       println("========================")
+       // 3. 伴生对象中的属性和方法都可以通过伴生对象名（类名）直接调用访问。
+       var student2 = Student11.newStudent("jack", 20)
+       student2.printInfo() //student: name = jack, age = 20, school = scala
+   
+       println("========================")
+   
+   
+       var student3 = Student11.apply("lucy", 33)
+       student3.printInfo() //student: name = lucy, age = 33, school = scala
+   
+       println("========================")
+   
+       // 1. 通过伴生对象的 apply 方法，实现不使用 new 关键字创建对象
+       var student4 = Student11("david", 44)
+       student4.printInfo() //student: name = david, age = 44, school = scala
+   
+     }
+   
+   }
+   
+   
+   // 2. 伴生对象对应的类称之为伴生类，伴生对象的名称应该和伴生类名一致。
+   // 如果想让主构造器变成私有的，可以在()之前加上 private ,当为私有后,只有伴生对象才可进行调用
+   class Student11 private(val name: String, val age: Int) {
+   
+     def printInfo() {
+       println(s"student: name = ${name}, age = $age, school = ${Student11.school}")
+     }
+   }
+   
+   // 1.伴生对象采用 object 关键字声明
+   object Student11 {
+     val school: String = "scala"
+   
+     // 定义一个类的对象实例的创建方法
+     def newStudent(name: String, age: Int): Student11 = new Student11(name, age)
+   
+   
+     def apply(name: String, age: Int): Student11 = new Student11(name, age)
+   
+   }
+   
+   ```
+
+   > **//注意：也可以创建其它类型对象，并不一定是伴生类对象**
+
+### 扩展：在 Scala 中实现单例模式
+
+```scala
+package com.scala.chapter06
+
+/**
+ * @program: scala
+ * @description: ${description}
+ * @author: JunWen
+ * @create: 2023-12-06 17:35
+ * */
+object Test12_Singleton {
+
+
+  def main(args: Array[String]): Unit = {
+
+    val student1 = Student12.getInstance()
+    student1.printInfo() //student: name = alice, age = 20, school = scala
+
+    val student2 = Student12.getInstance()
+
+    println(student1) //com.scala.chapter06.Student12@3ac3fd8b
+    println(student2) //com.scala.chapter06.Student12@3ac3fd8b
+  }
+
+}
+
+class Student12 private(val name: String, val age: Int) {
+  def printInfo() {
+    println(s"student: name = ${name}, age = $age, school = ${Student11.school}")
+  }
+}
+
+/**
+ * 饿汉式
+ */
+/*object Student12 {
+  private val student: Student12 = new Student12("alice", 20)
+
+  def getInstance(): Student12 = student
+}*/
+
+/**
+ * 懒汉式
+ */
+object Student12 {
+  private var student: Student12 = _
+
+  def getInstance(): Student12 = {
+    if (student == null) {
+      // 如果没有对象实例的话，就创建一个
+      student = new Student12("alice", 20)
+    }
+    student
+  }
+}
+```
+
+## 特质（Trait）
+
+**Scala 语言中，采用特质 `trait`（特征）来代替接口的概念**，也就是说，多个类具有相同的特质（特征）时，就可以将这个特质（特征）独立出来，采用关键字 `trait `声明
+
+Scala 中的 `trait `中即**可以有抽象属性和方法，也可以有具体的属性和方法，一个类可以混入（mixin）多个特质**。这种感觉**类似于 Java 中的抽象类**
+
+Scala 引入 `trait `特征，第一可以替代 Java 的接口，第二个也是对单继承机制的一种补充
+
+### 特质声明
+
+1. 基本语法
+
+   ```
+   trait 特质名 {
+   	trait 主体
+   }
+   ```
+
+2. 实例操作
+
+   ```scala
+   trait PersonTrait {
+    // 声明属性
+    var name:String = _
+    // 声明方法
+    def eat():Unit={
+    }
+    // 抽象属性
+    var age:Int
+   
+    // 抽象方法
+    def say():Unit
+   }
+   通过查看字节码，可以看到特质=抽象类+接口
+   ```
+
+### 特质基本语法
+
+一个类具有某种特质（特征），就意味着这个类满足了这个特质（特征）的所有要素， 所以在使用时，也采用了`extends `关键字，如果有多个特质或存在父类，那么需要采用 `with `关键字连接
+
+1. 基本语法
+
+   - 没有父类:class 类名 extends 特质 1 with 特质 2 with 特质 3 …
+   - 有父类 ：class 类名 extends 父类 with 特质 1 with 特质 2 with 特质 3…
+
+2. 说明
+
+   1. 类和特质的关系：使用继承的关系。
+   2. 当一个类去继承特质时，第一个连接词是 `extends`，后面是 `with`。
+   3. 如果一个类在同时继承特质和父类时，应当把父类写在 `extends `后
+
+3. 实例操作
+
+   1. 特质可以同时拥有抽象方法和具体方法
+
+      ```scala
+      package com.scala.chapter06
+      
+      /**
+       * @program: scala
+       * @description: ${description}
+       * @author: JunWen
+       * @create: 2023-12-06 17:58
+       * */
+      object Test13_Trait {
+      
+        def main(args: Array[String]): Unit = {
+          val student: Student13 = new Student13
+          student.sayHello()
+          student.study()
+          student.dating()
+          student.play()
+      
+          /*
+          hello from: student
+          hello from : student student
+          student student is studying
+          student student is dating
+          young people student is playing
+           */
+        }
+      }
+      
+      // 定义一个父类
+      class Person13 {
+        val name: String = "person"
+        var age: Int = 18
+      
+        def sayHello(): Unit = {
+          println(s"hello from: $name")
+        }
+      
+        def increase() = {
+          println("person increase")
+        }
+      
+      }
+      
+      //1. 特质可以同时拥有抽象方法和具体方法
+      trait Young {
+      
+        // 抽象属性
+        var age: Int
+      
+        // 声明属性
+        val name: String = "young"
+      
+        // 声明方法
+        def play() = {
+          println(s"young people $name is playing")
+      
+        }
+      
+        // 抽象方法
+        def dating(): Unit
+      }
+      
+      //（2）一个类可以实现/继承多个特质
+      //（3）所有的 Java 接口都可以当做 Scala 特质使用
+      class Student13 extends Person13 with Young with java.io.Serializable{
+        // 重写冲突的属性,必须重写,否则当前类不清楚使用哪个name
+        override val name: String = "student"
+      
+        // 实现抽象方法
+        override def dating(): Unit = println(s"student $name is dating")
+      
+        // 重写父类方法
+        override def sayHello(): Unit = {
+          super.sayHello()
+          println(s"hello from : student $name")
+        }
+      
+        def study() = println(s"student $name is studying")
+      }
+      ```
+
+   2. 一个类可以混入（mixin）多个特质
+   
+   3. 所有的 Java 接口都可以当做 Scala 特质使用
+   
+   4. 动态混入：可灵活的扩展类的功能
+   
+      1. 动态混入：创建对象时混入 trait，而无需使类混入该 trait
+      2. 如果混入的 trait 中有未实现的方法，则需要实现
+      
+      ```scala
+      package com.scala.chapter06
+      
+      /**
+       * @program: scala
+       * @description: ${description}
+       * @author: JunWen
+       * @create: 2023-12-07 21:58
+       * */
+      object Test14_TraitMixin {
+      
+        def main(args: Array[String]): Unit = {
+      
+          val student = new Student14
+          student.study()
+          student.increase()
+          student.play()
+          student.increase()
+      
+          /*
+          student student is studying
+          student student knowledge increased: 1
+          young people student is playing
+          student student knowledge increased: 2
+           */
+      
+          println("===========================")
+      
+          //（4）动态混入：可灵活的扩展类的功能
+          val studentWithTalent = new Student14 with Talent {
+            override def singing(): Unit = println("student is good at singign")
+      
+            override def dancing(): Unit = println("student is good at dancing")
+          }
+      
+          studentWithTalent.sayHello()
+          studentWithTalent.play()
+          studentWithTalent.study()
+          studentWithTalent.dating()
+          studentWithTalent.dating()
+          studentWithTalent.singing()
+      
+          /*
+          hello from: student
+          hello from : student student
+          young people student is playing
+          student student is studying
+          student student is dating
+          student student is dating
+          student is good at singign
+           */
+      
+        }
+      
+      }
+      
+      // 再定义一个特质
+      trait Knowledge {
+        var amount: Int = 0
+      
+        def increase(): Unit
+      }
+      
+      trait Talent {
+        def singing(): Unit
+      
+        def dancing(): Unit
+      }
+      
+      class Student14 extends Person13 with Young with Knowledge {
+      
+        // 重写冲突的属性
+        override val name: String = "student"
+      
+        // 实现抽象方法
+        override def dating(): Unit = println(s"student $name is dating")
+      
+        def study(): Unit = println(s"student $name is studying")
+      
+        // 重写父类方法
+        override def sayHello(): Unit = {
+          super.sayHello()
+          println(s"hello from : student $name")
+      
+        }
+      
+        // 实现特质中的抽象方法
+        override def increase(): Unit = {
+          amount += 1
+          println(s"student $name knowledge increased: $amount")
+        }
+      }
+      ```
+      
+
+### 特质叠加
+
+由于一个类可以混入（mixin）多个 `trait`，且 `trait `中可以有具体的属性和方法，若混入的特质中具有相同的方法（方法名，参数列表，返回值均相同），必然会出现继承冲突问题。 
+
+冲突分为以下两种
+
+- 第一种，一个类（Sub）混入的两个 trait（TraitA，TraitB）中具有相同的具体方法，且 两个 trait 之间没有任何关系，解决这类冲突问题，直接在类（Sub）中重写冲突方法
+
+  ![](http://www.dxb02.top/photos/scala/05.jpg)
+
+- 第二种，一个类（Sub）混入的两个 trait（TraitA，TraitB）中具有相同的具体方法，且两个 trait 继承自相同的 trait（TraitC），及所谓的“钻石问题”，解决这类冲突问题，Scala 采用了**特质叠加**的策略
+
+  ![](http://www.dxb02.top/photos/scala/06.jpg)
+
+所谓的**特质叠加**，就是将混入的多个 trait 中的冲突方法叠加起来，案例如下
+
+```scala
+package com.scala.chapter06
+
+/**
+ * @program: scala
+ * @description: ${description}
+ * @author: JunWen
+ * @create: 2023-12-08 08:58
+ * */
+object Test15_TraitOverlying {
+
+  def main(args: Array[String]): Unit = {
+
+    val student = new Student15
+    student.increase() //person increase
+
+    println("=================================")
+
+    val myFootBall = new MyFootBall
+    println(myFootBall.describe()) //my ball is a red - foot - ball
+
+  }
+
+}
+
+// 定义球类特征
+trait Ball {
+  def describe(): String = "ball"
+}
+
+// 定义颜色特征
+trait ColorBall extends Ball {
+  var color: String = "red"
+
+  override def describe(): String = color + " - " + super.describe()
+}
+
+// 定义一个自定义球的类
+trait CategoryBall extends Ball {
+  var category: String = "foot"
+
+  override def describe(): String = category + " - " + super.describe()
+}
+
+// 定义一个自定义球的类
+class MyFootBall extends CategoryBall with ColorBall {
+  override def describe(): String = "my ball is a " + super.describe()
+}
+
+trait Knowledge15 {
+  var amount: Int = 0
+
+  def increase(): Unit = {
+    println("knowledge increased")
+  }
+}
+
+trait Talent15 {
+  def singing(): Unit
+
+  def dancing(): Unit
+
+  def increase(): Unit = {
+    println("talent increased")
+  }
+}
+
+class Student15 extends Person13 with Talent15 with Knowledge15 {
+  override def singing(): Unit = println("singing")
+
+  override def dancing(): Unit = println("dancing")
+
+  // 指定调用父类Person13.increase()方法
+  override def increase(): Unit = super[Person13].increase()
+}
+
+```
+
+### 特质叠加执行顺序
+
+思考：上述案例中的 super.describe()调用的是父 trait 中的方法吗？
+
+当一个类混入多个特质的时候，scala 会对所有的特质及其父特质按照一定的顺序进行 排序，而此案例中的 super.describe()调用的实际上是排好序后的下一个特质中的 describe() 方法。，排序规则如下
+
+![](http://www.dxb02.top/photos/scala/07.jpg)
+
+
+
+结论：
+
+1. 案例中的 super，不是表示其父特质对象，而是表示上述叠加顺序中的下一个特质， 即，**MyClass 中的 super 指代 Color，Color 中的 super 指代 Category，Category 中的 super 指代 Ball**
+
+2. 如果想要调用某个指定的混入特质中的方法，可以增加约束：`super[]`，
+
+   例如`super[Category].describe()`
+
+
+
+### 特质自身类型
+
+1. 说明
+
+   自身类型可实现依赖注入的功能
+
+2. 实例操作
+
+   ```scala
+   package com.scala.chapter06
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-08 10:02
+    * */
+   object Test16_TraitSelfType {
+   
+     def main(args: Array[String]): Unit = {
+   
+       val user = new RegisterUser("alice", "123456")
+       user.insert() //insert into db:alice
+     }
+   
+   }
+   
+   class User(val name: String, val password: String)
+   
+   trait UserDao {
+   
+     _: User =>
+   
+     def insert(): Unit = {
+       println(s"insert into db:${this.name}")
+     }
+   
+   }
+   
+   class RegisterUser(name: String, password: String) extends User(name, password) with UserDao
+   ```
+
+### 特质和抽象类的区别
+
+1. 优先使用特质。一个类扩展多个特质是很方便的，但却只能扩展一个抽象类
+2. 如果你需要构造函数参数，使用抽象类。因为抽象类可以定义**带参数**的构造函数， 而特质不行（有无参构造）
+
+
+
+## 扩展
+
+### 类型检查和转换
+
+1. 说明
+
+   1. `obj.isInstanceOf[T]`：判断 obj 是不是 T 类型
+   2. `obj.asInstanceOf[T]`：将 obj 强转成 T 类型。
+   3. `classOf `获取对象的类名
+
+2. 实例操作
+
+   ```scala
+   object Test17_Extends {
+   
+     def main(args: Array[String]): Unit = {
+       // 1. 类型的检测和转换
+       val student: Student17 = new Student17("alice", 18)
+       student.study() //student study
+       student.sayHi() //hi from student alice
+   
+       val person: Person17 = new Student17("jack", 20)
+       person.sayHi() //hi from student jack
+   
+       println("======================")
+       // 类型判断
+       println("student is Student17 : " + student.isInstanceOf[Student17]) //student is Student17 : true
+       println("student is Person17 : " + student.isInstanceOf[Person17]) //student is Person17 : true
+       println("person is Person17 : " + person.isInstanceOf[Person17]) //person is Person17 : true
+       println("person is Student17 : " + person.isInstanceOf[Student17]) //person is Student17 : true
+       println("======================")
+   
+       val person2: Person17 = new Person17("carry", 11)
+       println("person2 is Student17: " + person2.isInstanceOf[Student17]) //person2 is Student17: false
+       println("======================")
+   
+       // 类型转换
+       if (person.isInstanceOf[Student17]) {
+         val newStudent = person.asInstanceOf[Student17]
+         newStudent.study() //student study
+       }
+       println("======================")
+       println(classOf[Student17]) //class com.scala.chapter06.Student17
+   
+     }
+   
+   }
+   
+   
+   class Person17(val name: String, val age: Int) {
+     def sayHi(): Unit = {
+       println("hi from person" + name)
+     }
+   }
+   
+   
+   class Student17(name: String, age: Int) extends Person17(name, age) {
+     override def sayHi(): Unit = {
+       println("hi from student " + name)
+     }
+   
+     def study(): Unit = {
+       println("student study")
+     }
+   }
+   ```
+
+
+
+
+
+### 枚举类和应用类
+
+1. 说明
+
+   - 枚举类：需要继承 `Enumeration`
+   - 应用类：需要继承 App(可以直接运行不需写main方法)
+
+2. 实例操作
+
+   - 枚举类
+
+     ```scala
+     object Test17_Extends {
+     
+       def main(args: Array[String]): Unit = {
+         // 2. 测试枚举类
+         println(WorkDay.MONDAY) //Monday
+       }
+     
+     }
+     
+     object WorkDay extends Enumeration {
+       val MONDAY = Value(1, "Monday")
+       val TUESDAY = Value(2, "TuesDay")
+     }
+     ```
+
+   - 应用类
+
+     ```scala
+     object TestApp extends App {
+       println("app start") //app start
+     
+       type MyString = String
+       val a: MyString = "abc"
+       println(a) //abc
+     }
+     ```
+
+### Type 定义新类型
+
+1. 说明
+
+   使用 `type `关键字可以定义新的数据数据类型名称，本质上就是类型的一个别名
+
+2. 案例操作
+
+   ```scala
+   object Test {
+        def main(args: Array[String]): Unit = {
+            type S=String
+            var v:S="abc"
+            def test():S="xyz"
+        }
+   }
+   ```
+
+------
+
+
+
+# 第七章 集合
+
+## 集合简介
+
+1. Scala 的集合有三大类：序列 `Seq`、集 `Set`、映射 `Map`，所有的集合都扩展自 `Iterable `特质。
+2. 对于几乎所有的集合类，Scala 都同时提供了可变和不可变的版本，分别位于以下两 个包
+   - 不可变集合：`scala.collection.immutable`
+   - 可变集合： `scala.collection.mutable`
+3. Scala 不可变集合，就是指该集合对象不可修改，每次修改就会返回一个新对象，而 不会对原对象进行修改。类似于 java 中的 `String `对象
+4. 可变集合，就是这个集合可以直接对原对象进行修改，而不会返回新的对象。类似 于 java 中 `StringBuilder `对象
+
+> **建议：在操作集合的时候，不可变用符号，可变用方法**
+
+### 不可变集合继承图
+
+![](http://www.dxb02.top/photos/scala/08.jpg)
+
+1. `Set`、`Map` 是 Java 中也有的集合
+2. Seq 是 Java 没有的，我们发现 List 归属到 Seq 了，因此这里的 List 就和 Java 不是同一个 概念了
+3. 我们前面的 ``for ``循环有一个 1 to 3，就是 `IndexedSeq `下的 `Range`
+4. `String `也是属于 `IndexedSeq`
+5. 我们发现经典的数据结构比如 `Queue `和 `Stack `被归属到 LinearSeq(线性序列)
+6. 大家注意 Scala 中的 Map 体系有一个 `SortedMap`，说明 Scala 的 Map 可以支持排序
+7. `IndexedSeq `和 `LinearSeq `的区别
+   1. `IndexedSeq `是通过索引来查找和定位，因此速度快，比如 String 就是一个索引集合，通过索引即可定位
+   2. `LinearSeq `是线型的，即有头尾的概念，这种数据结构一般是通过遍历来查找
+
+### 可变集合继承图
+
+![](http://www.dxb02.top/photos/scala/09.jpg)
+
+## 数组
+
+### 不可变数组
+
+1. 第一种方式定义数组
+
+   ```scala
+   val arr1 = new Array[Int](10)
+   ```
+
+   1. `new `是关键字
+   2. `[Int]`是指定可以存放的数据类型，如果希望存放任意数据类型，则指定 Any
+   3. (10)，表示数组的大小，确定后就不可以变化
+
+2. 案例实操
+
+   ```scala
+   package com.scala.chapater07
+   
+   object Test01_ImmutableArray {
+   
+     def main(args: Array[String]): Unit = {
+       // 1. 创建数组
+       val arr: Array[Int] = new Array[Int](5)
+       println(arr.length) //5
+       println("====================")
+       // 2. 访问元素
+       println(arr(0)) //0
+       //println(arr(5)) // error 越界
+   
+       println("====================")
+   
+       //（2）数组赋值
+       //（2.1）修改某个元素的值
+       arr(0) = 12
+       arr(4) = 23
+       println(arr(0)) //12
+       println(arr(4)) //23
+   
+       //（2.2）采用方法的形式给数组赋值
+       arr.update(0, 234)
+       println(arr(0)) //234
+   
+       println("====================")
+   
+       // 3. 数组的遍历
+       //（3.1）查看数组
+       println(arr) //[I@3ac3fd8b
+       println(arr.mkString(",")) //234,0,0,0,23
+   
+       println("====================")
+   
+       // 1) 普通for循环
+       for (i <- 0 until arr.length) {
+         /*
+         12
+         0
+         0
+         0
+         23
+          */
+         println(arr(i))
+       }
+       println("====================")
+       // 上面的便利可以简化如下
+       /*
+       12
+       0
+       0
+       0
+       23
+        */
+       for (i <- arr.indices) println(arr(i))
+       println("====================")
+       // 2) 直接遍历所有元素，增强for循环
+       /*
+       12
+       0
+       0
+       0
+       23
+        */
+       for (elem <- arr) println(elem)
+       println("====================")
+       // 3) 迭代器
+       val iter = arr.iterator
+       while (iter.hasNext) {
+   
+         /*
+         234
+         0
+         0
+         0
+         23
+          */
+         println(iter.next())
+       }
+   
+       println("====================")
+   
+       // 4) 调用foreach方法
+       /*
+       234
+       0
+       0
+       0
+       23
+        */
+       arr.foreach((elem: Int) => println(elem))
+   
+       println("====================")
+   
+       // 上面也可简写为
+       arr.foreach(println)
+   
+       println("====================")
+       //（4）增加元素（由于创建的是不可变数组，增加元素，其实是产生新的数组
+       val newArr = arr.:+(11)
+       println(newArr.mkString(",")) //234,0,0,0,23,11
+       println(newArr.mkString("--")) //234--0--0--0--23--11
+   
+       // 上面添加元素也可简写如下
+       val newArr2 = newArr.+:(22)
+       println(newArr2.mkString(",")) //22,234,0,0,0,23,11
+   
+       // 上面的方法也可以继续简写如下(注意+的位置,是把要紧跟着新添加的元素,在前面代表添加在前面,在后面代表添加在后面)
+       val newArr3 = newArr2 :+ 33
+       val newArr4 = 44 +: 55 +: newArr3 :+ 66 :+ 77
+   
+       println(newArr3.mkString(",")) //22,234,0,0,0,23,11,33
+       println(newArr4.mkString(",")) //44,55,22,234,0,0,0,23,11,33,66,77
+   
+   
+       // 另一种创建方式
+       val arr2 = Array(11, 22, 33, 44, 55)
+   
+     }
+   
+   }
+   
+   ```
+
+3. 第二种方式定义数组
+
+   ```scala
+   val arr1 = Array(1, 2)
+   ```
+
+   1. 在定义数组时，直接赋初始值
+
+   2. 使用 `apply `方法创建数组对象
+
+      ```scala
+      //底层原码可以看到也是根据传参new一个数组对象返回 
+      def apply(x: Int, xs: Int*): Array[Int] = {
+          val array = new Array[Int](xs.length + 1)
+          array(0) = x
+          val iterator = xs.iterator
+          var i = 1
+          while (iterator.hasNext) {
+            array(i) = iterator.next(); i += 1
+          }
+          array
+        }
+      ```
+
+4. 实例操作
+
+   ```scala
+       // 另一种创建方式
+       val arr2 = Array(11, 22, 33, 44, 55)
+       arr2.foreach(println)
+       /*
+       11
+       22
+       33
+       44
+       55
+        */
+   
+       val arr3 = Array.apply(1, 2, 3, 4, 5)
+       arr3.foreach(println)
+       /*
+       1
+       2
+       3
+       4
+       5
+        */
+   ```
+
+
+
+### 可变数组
+
+1. 定义变长数组
+
+   ```scala
+   val arr01 = ArrayBuffer[Any](3, 2, 5)
+   ```
+
+   1. `[Any]`存放任意数据类型
+   2. (3, 2, 5)初始化好的三个元素
+   3. `ArrayBuffer `需要引入` scala.collection.mutable.ArrayBuffer`
+
+2. 实例操作
+
+   1. `ArrayBuffer `是有序的集合
+   2. 增加元素使用的是 `append `方法()，支持可变参数
+
+   ```scala
+   package com.scala.chapater07
+   
+   import scala.collection.mutable
+   import scala.collection.mutable.ArrayBuffer
+   
+   object Test02_ArrayBuffer {
+   
+     def main(args: Array[String]): Unit = {
+       // 1. 创建可变数组
+       val arr1: ArrayBuffer[Int] = new ArrayBuffer[Int]()
+   
+       // 创建并初始赋值可变数组
+       val arr2 = ArrayBuffer(11, 22, 33)
+   
+       println(arr1) //ArrayBuffer()
+       println(arr2) //ArrayBuffer(11, 22, 33)
+   
+       println("==================================")
+       // 2. 访问元素
+       println(arr2(0)) //11
+       arr2(0) = 44
+       println(arr2(0)) //44
+   
+       println("==================================")
+   
+       // 3. 添加元素
+       // 尾部添加元素
+       val newArr1 = arr2 :+ 15
+       println(arr2) //ArrayBuffer(44, 22, 33)
+       println(newArr1) //ArrayBuffer(44, 22, 33, 15)
+       println(arr2 == newArr1) //false
+   
+       val newArr2 = arr2 += 19
+       println(arr2) //ArrayBuffer(44, 22, 33, 19)
+       println(newArr2) //ArrayBuffer(44, 22, 33, 19)
+       println(arr2 == newArr2) //true
+   
+       newArr2 += 13
+       println(arr2) //ArrayBuffer(44, 22, 33, 19, 13)
+   
+       println("==================================")
+   
+       // 头部添加元素
+       77 +=: arr2
+       println(arr2) //ArrayBuffer(77, 44, 22, 33, 19, 13)
+       println(newArr2) //ArrayBuffer(77, 44, 22, 33, 19, 13)
+   
+       arr2.append(36)
+       // 此方法存在冲突,建议使用appendAll,如下
+       //arr1.prepend(11, 76)
+       arr2.appendAll(ArrayBuffer(11, 22, 33)) //ArrayBuffer(77, 44, 22, 33, 19, 13, 36, 11, 22, 33)
+       println(arr2)
+   
+       // 向指定的位置插入数据,在0位插入值为1的元素
+       arr2.insert(0, 1)
+       println(arr2) //ArrayBuffer(1, 77, 44, 22, 33, 19, 13, 36, 11, 22, 33)
+       // 指定的位置插入数组
+       arr2.insertAll(1, ArrayBuffer(2, 3))
+       println(arr2) //ArrayBuffer(1, 2, 3, 77, 44, 22, 33, 19, 13, 36, 11, 22, 33)
+   
+       println("==================================")
+   
+       // 4. 删除元素
+       arr2.remove(3)
+       println(arr2) //ArrayBuffer(1, 2, 3, 44, 22, 33, 19, 13, 36, 11, 22, 33)
+   
+       // 参数一,起始位,参数二,删除个数
+       arr2.remove(0, 5)
+       println(arr2) //ArrayBuffer(33, 19, 13, 36, 11, 22, 33)
+   
+       // 删除值为33的元素(重复元素只能删除一个)
+       arr2 -= 33
+       println(arr2) //ArrayBuffer(19, 13, 36, 11, 22, 33)
+   
+       println("==================================")
+   
+   
+     }
+   
+   }
+   
+   ```
+
+### 不可变数组与可变数组的转换
+
+1. 说明
+
+   ```scala
+   arr1.toBuffer //不可变数组转可变数组
+   arr2.toArray //可变数组转不可变数组
+   ```
+
+   1. `arr2.toArray` 返回结果才是一个不可变数组，arr2 本身没有变化
+   2. `arr1.toBuffer` 返回结果才是一个可变数组，arr1 本身没有变化
+
+2. 实例操作
+
+   ```scala
+       // 5. 可变数组转换为不可变数组
+       val arr: ArrayBuffer[Int] = ArrayBuffer(22, 33, 44)
+       val newArr: Array[Int] = arr.toArray
+       println(newArr.mkString(",")) //22,33,44
+   
+       println("==================================")
+   
+       // 6. 不可变数组转换为可变数组
+       val buffer: mutable.Buffer[Int] = newArr.toBuffer
+       println(buffer) //ArrayBuffer(22, 33, 44)
+       println(newArr.mkString(",")) //22,33,44
+   ```
+
+### 多维数组
+
+1. 多维数组定义
+
+   ```scala
+   val arr = Array.ofDim[Double](3,4)
+   ```
+
+   说明：二维数组中有三个一维数组，每个一维数组中有四个元素
+
+2. 案例实操
+
+   ```scala
+   package com.scala.chapater07
+   
+   object Test03_MulArray {
+   
+     def main(args: Array[String]): Unit = {
+       // 1. 创建二维数组(第一个参数是有几维,第二个参数是有几个元素)
+       val array: Array[Array[Int]] = Array.ofDim[Int](2, 3)
+   
+       // 2. 访问元素
+       array(0)(2) = 11
+       array(1)(0) = 22
+   
+   
+       println(array.mkString(",")) //[I@2c6a3f77,[I@246ae04d
+       //遍历二维数组
+       for (i <- 0 until array.length; j <- 0 until array(i).length) { //i 就是一维数组
+         /*
+         0
+         0
+         11
+         22
+         0
+         0
+          */
+         println(array(i)(j))
+       }
+   
+       println("=====================")
+   
+       for (i <- array.indices; j <- array(i).indices) {
+         /*
+         0	0	11
+         22	0	0
+          */
+         print(array(i)(j) + "\t")
+         if (j == array(i).length - 1) println()
+       }
+   
+   
+       println("=====================")
+   
+       //使用foreach遍历
+       array.foreach(line => line.foreach(println))
+       /*
+         0
+         0
+         11
+         22
+         0
+         0
+          */
+       println("=====================")
+   
+       // 上面方法也可简写如下
+       array.foreach(_.foreach(println))
+       /*
+       0
+       0
+       11
+       22
+       0
+       0
+        */
+   
+     }
+   
+   }
+   
+   ```
+
+## 列表 List
+
+### 不可变 List
+
+1. 说明
+
+   1. List 默认为不可变集合
+   2. 创建一个 List（数据有顺序，可重复）
+   3. 遍历 List
+   4. List 增加数据
+   5. 集合间合并：将一个整体拆成一个一个的个体，称为扁平化
+   6. 取指定数据
+   7. 空集合 Nil
+
+2. 案例实操
+
+   ```scala
+   
+   ```
+
+### 可变 ListBuffer
+
+1. 说明
+
+   1. 创建一个可变集合 ListBuffer
+   2. 向集合中添加数据
+   3. 打印集合数据
+
+2. 实例操作
+
+   ```scala
+   
+   ```
+
+##  Set 集合
+
+默认情况下，Scala 使用的是不可变集合，如果你想使用可变集合，需要引用 `scala.collection.mutable.Set` 包
+
+
+
+### 不可变 Set
+
+1. 说明
+
+   1. Set 默认是不可变集合，数据无序
+   2. 数据不可重复
+   3. 遍历集合
+
+2. 实例操作
+
+   ```scala
+   
+   ```
+
+
+
+### 可变 `mutable.Set`
+
+1. 说明
+
+   1. 创建可变集合 mutable.Set
+   2. 打印集合
+   3. 集合添加元素
+   4. 向集合中添加元素，返回一个新的 Set
+   5. 删除数据
+
+2. 实例操作
+
+   ```scala
+   
+   ```
+
+
+
+## Map 集合
+
+Scala 中的 Map 和 Java 类似，也是一个散列表，它存储的内容也是键值对（key-value） 映射
+
+### 不可变 Map
+
+1. 说明
+
+   1. 创建不可变集合 Map
+   2. 循环打印
+   3. 访问数据
+   4. 如果 key 不存在，返回 0
+
+2. 实例操作
+
+   ```scala
+   
+   ```
+
+### 可变 Map
+
+1. 说明
+
+   1. 创建可变集合
+   2. 打印集合
+   3. 向集合增加数据
+   4. 删除数据
+   5. 修改数据
 
 2. 实例操作
 
@@ -3743,3 +5885,221 @@ Scala 中的 public 属性，底层实际为 private，并通过 get 方法（ob
    ```
 
    
+
+## 元组
+
+1. 说明
+
+   元组也是可以理解为一个容器，可以存放各种相同或不同类型的数据。说的简单点，就是将多个无关的数据封装为一个整体，称为元组
+
+   > 注意：元组中最大只能有 22 个元素。
+
+2. 案例实操
+
+   1. 声明元组的方式：(元素 1，元素 2，元素 3)
+   2. 访问元组
+   3. Map 中的键值对其实就是元组,只不过元组的元素个数为 2，称之为对偶
+
+   ```scala
+   
+   ```
+
+
+
+## 集合常用函数
+
+### 基本属性和常用操作
+
+1. 说明
+
+   1. 获取集合长度
+   2. 获取集合大小
+   3. 循环遍历
+   4. 迭代器
+   5. 生成字符串
+   6. 是否包含
+
+2. 实例操作
+
+   ```scala
+   
+   ```
+
+
+
+### 衍生集合
+
+1. 说明
+
+   1. 获取集合的头
+   2. 获取集合的尾（不是头的就是尾）
+   3. 集合最后一个数据
+   4. 集合初始数据（不包含最后一个）
+   5. 反转
+   6. 取前（后）n 个元素
+   7. 去掉前（后）n 个元素
+   8. 并集
+   9. 交集
+   10. 差集
+   11. 拉链
+   12. 滑窗
+
+2. 案例实操
+
+   ```scala
+   
+   ```
+
+
+
+### 集合计算简单函数
+
+1. 说明
+
+   1. 求和
+   2. 求乘积
+   3. 最大值
+   4. 最小值
+   5. 排序
+
+2. 实例操作
+
+   ```scala
+   
+   
+   
+   ```
+
+ 1.  sorted
+
+     对一个集合进行自然排序，通过传递隐式的 Ordering
+
+ 2.  sortBy
+
+     对一个属性或多个属性进行排序，通过它的类型。
+
+ 3.  sortWith
+
+     基于函数的排序，通过一个 comparator 函数，实现自定义排序的逻辑
+
+
+
+### 集合计算高级函数
+
+1. 说明
+
+   1. 过滤
+
+   2. 转化/映射（map）
+
+   3. 扁平化
+
+   4. 扁平化+映射 注：flatMap 相当于先进行 map 操作，在进行 flatten 操作
+
+      集合中的每个元素的子元素映射到某个函数并返回新集合
+
+   5. 分组(group)
+
+      按照指定的规则对集合的元素进行分组
+
+   6. 简化（归约）
+
+   7. 折叠
+
+2. 实例操作
+
+   ```scala
+   
+   ```
+
+3. Reduce 方法 
+
+   Reduce 简化（归约） ：通过指定的逻辑将集合中的数据进行聚合，从而减少数据，最 终获取结果
+
+   ```scala
+   
+   ```
+
+4. Fold 方法
+
+   Fold 折叠：化简的一种特殊情况。
+
+   1. 案例实操：fold 基本使用
+
+      ```scala
+      
+      ```
+
+      
+
+   2. 案例实操：两个集合合并
+
+      ```scala
+      
+      ```
+
+
+
+### 普通 WordCount 案例
+
+1. 需求
+
+   单词计数：将集合中出现的相同的单词，进行计数，取计数排名前三的结果
+
+2. 需求分析
+
+   ![](http://www.dxb02.top/photos/scala/10.jpg)
+
+3. 实例操作
+
+   ```scala
+   
+   ```
+
+### 复杂 WordCount 案例
+
+1. 方式一
+
+   ```scala
+   
+   ```
+
+   
+
+2. 方式二
+
+   ```scala
+   
+   ```
+
+
+
+## 队列
+
+1. 说明
+
+   Scala 也提供了队列（Queue）的数据结构，队列的特点就是先进先出。进队和出队的方 法分别为 enqueue 和 dequeue
+
+2. 实例操作
+
+   ```scala
+   
+   ```
+
+   
+
+## 并行集合
+
+1. 说明
+
+   Scala 为了充分使用多核 CPU，提供了并行集合（有别于前面的串行集合），用于多核 环境的并行计算
+
+2. 实例操作
+
+   ```scala
+   
+   ```
+
+------
+
+# 第八章 模式匹配
