@@ -5792,6 +5792,77 @@ class Student15 extends Person13 with Talent15 with Knowledge15 {
 2. 案例实操
 
    ```scala
+   package com.scala.chapter07
+   
+   object Test04_List {
+   
+     def main(args: Array[String]): Unit = {
+       // 1. 创建一个List
+       val list = List(11, 22, 33)
+       println(list) //List(11, 22, 33)
+   
+       println("======================")
+   
+       // 2. 访问和遍历元素
+       println(list(1)) //22
+       list.foreach(println)
+       /*
+       22
+       11
+       22
+       33
+        */
+       println("======================")
+       // 3. 添加元素
+       // 向前添加元素
+       val list2 = 10 +: list
+       // 向后添加元素
+       val list3 = list :+ 23
+   
+       println(list) //List(11, 22, 33)
+       println(list2) //List(10, 11, 22, 33)
+       println(list3) //List(11, 22, 33, 23)
+   
+       println("======================")
+   
+       // 向前添加元素
+       val list4 = list2.::(51)
+       println(list4) //List(51, 10, 11, 22, 33)
+   
+       // 添加一个新List,元素只有一个(空集合 Nil)
+       val list5 = Nil.::(13)
+       println(list5) //List(13)
+   
+       val list6 = 73 :: 32 :: Nil
+       println(list6) //List(73, 32)
+   
+       val list7 = 17 :: 28 :: 59 :: 16 :: Nil
+       println(list7) //List(17, 28, 59, 16)
+   
+       println("======================")
+   
+       val list8 = 31 :: list2
+       println(list8) //List(31, 10, 11, 22, 33)
+   
+       println("=================")
+   
+   
+       // 4. 合并列表
+       // 合并后List会在List列表里
+       val list9 = list6 :: list7
+       println(list9) //List(List(73, 32), 17, 28, 59, 16)
+   
+       // 合并两个list为一个List,将一个整体拆成一个一个的个体，称为扁平化
+       val list10 = list6 ::: list7
+       println(list10) // List(73, 32, 17, 28, 59, 16)
+   
+       // 合并同上
+       val list11 = list6 ++ list7
+       println(list11) //List(73, 32, 17, 28, 59, 16)
+   
+     }
+   
+   }
    
    ```
 
@@ -5806,7 +5877,73 @@ class Student15 extends Person13 with Talent15 with Knowledge15 {
 2. 实例操作
 
    ```scala
+   package com.scala.chapter07
    
+   import scala.collection.mutable.ListBuffer
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-12 10:04
+    * */
+   object Test05_ListBuffer {
+   
+     def main(args: Array[String]): Unit = {
+       // 1. 创建可变列表
+       val list1: ListBuffer[Int] = new ListBuffer[Int]()
+       list1.append(11, 22, 33, 44)
+   
+   
+       val list2 = ListBuffer(11, 22, 33, 44)
+   
+       println(list1) //ListBuffer(11, 22, 33, 44)
+       println(list2) //ListBuffer(11, 22, 33, 44)
+   
+       println("==============================")
+       // 2. 添加元素
+       // 尾部追加一元素
+       list1.append(55)
+       // 头部追加一元素
+       list2.prepend(55)
+   
+       println(list1) //ListBuffer(11, 22, 33, 44, 55)
+       println(list2) //ListBuffer(55, 11, 22, 33, 44)
+   
+       println("==============================")
+   
+       31 +=: 96 +=: list1 += 25 += 83
+       println(list1) //ListBuffer(31, 96, 11, 22, 33, 44, 55, 25, 83)
+   
+       println("==============================")
+       // 3. 合并list
+       val list3 = list1 ++ list2
+       println(list3) //ListBuffer(31, 96, 11, 22, 33, 44, 55, 25, 83, 55, 11, 22, 33, 44)
+       println("==============================")
+   
+       // 前面的列表合到后面的列表
+       list1 ++=: list2
+       println(list1) //ListBuffer(31, 96, 11, 22, 33, 44, 55, 25, 83)
+       println(list2) //ListBuffer(31, 96, 11, 22, 33, 44, 55, 25, 83, 55, 11, 22, 33, 44)
+   
+       println("==============================")
+       // 4. 修改元素
+       list2(0) = 10
+       list2.update(1, 9)
+       println(list2) //ListBuffer(10, 9, 11, 22, 33, 44, 55, 25, 83, 55, 11, 22, 33, 44)
+   
+   
+       // 5. 删除元素
+       // 删除下标2的元素
+       list2.remove(2)
+       // 删除元素为5,只能删除一个,首次出现
+       list2 -= 55
+       println(list2) //ListBuffer(10, 9, 22, 33, 44, 25, 83, 55, 11, 22, 33, 44)
+   
+   
+     }
+   
+   }
    ```
 
 ##  Set 集合
@@ -5826,6 +5963,60 @@ class Student15 extends Person13 with Talent15 with Knowledge15 {
 2. 实例操作
 
    ```scala
+   package com.scala.chapter07
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-12 10:42
+    * */
+   object Test06_ImmutableSet {
+   
+   
+     def main(args: Array[String]): Unit = {
+       // 1. 创建set(Set 默认是不可变集合，数据无序)(数据不可重复)
+       val set1 = Set(11, 22, 33, 44, 55, 11, 33)
+       println(set1) //HashSet(33, 11, 55, 22, 44)
+   
+       println("===========================")
+   
+       // 2. 添加元素,顺序是无序的
+       val set2 = set1 + 66
+       println(set1) //HashSet(33, 11, 55, 22, 44)
+       println(set2) //HashSet(33, 66, 11, 55, 22, 44)
+   
+       println("===========================")
+   
+       // 3. 合并set
+       val set3 = Set(12, 13, 14, 15, 16, 17)
+       val set4 = set2 ++ set3
+       println(set2) //HashSet(33, 66, 11, 55, 22, 44)
+       println(set3) //HashSet(14, 13, 17, 12, 16, 15)
+       println(set4) //HashSet(14, 33, 13, 17, 12, 66, 16, 11, 55, 15, 22, 44)
+   
+       println("===========================")
+   
+       // 4. 删除元素
+       val set5 = set3 - 13
+       println(set3) //HashSet(14, 13, 17, 12, 16, 15)
+       println(set5) //HashSet(14, 17, 12, 16, 15)
+   
+       println("===========================")
+       
+       // 遍历集合
+       for (x <- set5) {
+         println(x)
+         /*
+         14
+         17
+         12
+         16
+         15
+          */
+       }
+     }
+   }
    
    ```
 
@@ -5835,7 +6026,7 @@ class Student15 extends Person13 with Talent15 with Knowledge15 {
 
 1. 说明
 
-   1. 创建可变集合 mutable.Set
+   1. 创建可变集合 `mutable.Set`
    2. 打印集合
    3. 集合添加元素
    4. 向集合中添加元素，返回一个新的 Set
@@ -5844,10 +6035,88 @@ class Student15 extends Person13 with Talent15 with Knowledge15 {
 2. 实例操作
 
    ```scala
+   package com.scala.chapter07
    
+   import scala.collection.mutable
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-13 09:07
+    * */
+   object Test07_MutableSet {
+   
+     def main(args: Array[String]): Unit = {
+       // 1. 创建可变集合
+       val mutableSet: mutable.Set[Int] = mutable.Set(11, 22, 33, 44, 55, 66, 11, 22, 33)
+       println(mutableSet) //HashSet(33, 66, 22, 55, 11, 44)
+   
+       println("========================")
+   
+       // 2. 添加元素
+       val mutableSet2 = mutableSet + 77
+       println(mutableSet) //HashSet(33, 66, 22, 55, 11, 44)
+       println(mutableSet2) //HashSet(33, 66, 22, 55, 11, 44, 77)
+   
+       mutableSet += 77
+       println(mutableSet) //HashSet(33, 66, 22, 55, 11, 44, 77)
+   
+       println("========================")
+   
+       val flag = mutableSet.add(10)
+       println(flag) //true
+       println(mutableSet) //HashSet(33, 66, 22, 55, 10, 11, 44, 77)
+   
+       val flag2 = mutableSet.add(10)
+       println(flag2) //false
+       println(mutableSet) //HashSet(33, 66, 22, 55, 10, 11, 44, 77)
+   
+   
+       println("========================")
+   
+       // 3. 删除元素
+       mutableSet -= 11
+       println(mutableSet) //HashSet(33, 66, 22, 55, 10, 44, 77)
+   
+       val flag3 = mutableSet.remove(10)
+       println(flag3) //true
+       println(mutableSet) //HashSet(33, 66, 22, 55, 44, 77)
+   
+       val flag4 = mutableSet.remove(10)
+       println(flag4) //false
+       println(mutableSet) //HashSet(33, 66, 22, 55, 44, 77)
+   
+       println("========================")
+   
+       // 4. 合并两个Set
+       val mutableSet3 = mutable.Set(10, 20, 30, 40)
+       val mutableSet4 = mutableSet ++ mutableSet3
+       println(mutableSet4) //HashSet(33, 66, 20, 22, 55, 40, 10, 44, 77, 30)
+       println(mutableSet) //HashSet(33, 66, 22, 55, 44, 77)
+       println(mutableSet3) //HashSet(33, 66, 22, 55, 11, 44, 77)
+   
+       println("========================")
+       mutableSet3 ++= mutableSet
+       println(mutableSet) //HashSet(33, 66, 22, 55, 44, 77)
+       println(mutableSet3) //HashSet(33, 66, 20, 22, 55, 40, 10, 44, 77, 30)
+   
+       println("========================")
+       // 打印集合
+       mutableSet.foreach(println)
+       /*
+       33
+       66
+       22
+       55
+       44
+       77
+        */
+   
+     }
+   
+   }
    ```
-
-
 
 ## Map 集合
 
@@ -5865,7 +6134,81 @@ Scala 中的 Map 和 Java 类似，也是一个散列表，它存储的内容也
 2. 实例操作
 
    ```scala
+   package com.scala.chapter07
    
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-13 09:46
+    * */
+   object Test08_ImmutableMap {
+   
+     def main(args: Array[String]): Unit = {
+       // 1. 创建不可变集合 Map
+       val map: Map[String, Int] = Map("a" -> 11, "b" -> 22, "c" -> 33)
+       println(map) //Map(a -> 11, b -> 22, c -> 33)
+       println(map.getClass) //class scala.collection.immutable.Map$Map3
+   
+       println("===============================")
+       // 2. 遍历元素
+   
+       for (key <- map.keys) {
+         // 使用 get 访问 map 集合的数据，会返回特殊类型 Option(选项): 有值 （Some ），无值(None)
+         println(key + "=" + map.get(key).get)
+         /*
+         a=11
+         b=22
+         c=33
+          */
+       }
+   
+   
+       println("---------------------")
+   
+   
+       map.foreach(println)
+       /*
+       (a,11)
+       (b,22)
+       (c,33)
+        */
+       println("---------------------")
+   
+       map.foreach((kv: (String, Int)) => println(kv))
+       /*
+       (a,11)
+       (b,22)
+       (c,33)
+        */
+   
+       println("===============================")
+       // 3. 取map中所有的key 或者 value
+       for (key <- map.keys) {
+         println(s"$key---> ${map.get(key)}")
+         // 注意这里的Some类型是Option的子类
+         /*
+         a---> Some(11)
+         b---> Some(22)
+         c---> Some(33)
+          */
+       }
+   
+       println("===============================")
+   
+       // 4. 访问某一个key的value
+       println("a : " + map.get("a").get) //a : 11
+       println("c : " + map.get("c")) //c : Some(33)
+       //如果 key 不存在，返回 0
+       println("b : " + map.getOrElse("b", 0)) //b : 22
+   
+   
+       println("--------------------------------")
+       println(map("a")) //1
+   
+     }
+   
+   }
    ```
 
 ### 可变 Map
@@ -5881,16 +6224,93 @@ Scala 中的 Map 和 Java 类似，也是一个散列表，它存储的内容也
 2. 实例操作
 
    ```scala
+   package com.scala.chapter07
    
+   import scala.collection.mutable
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-13 10:28
+    * */
+   object Test09_MutableMap {
+   
+     def main(args: Array[String]): Unit = {
+       // 1. 创建可变集合
+       val mutableMap: mutable.Map[String, Int] = mutable.Map("a" -> 11, "b" -> 22, "c" -> 33)
+       println(mutableMap) //HashMap(a -> 11, b -> 22, c -> 33)
+       println(mutableMap.getClass) //class scala.collection.mutable.HashMap
+   
+   
+       println("===================================")
+       // 2. 添加元素
+       mutableMap.put("d", 44)
+       mutableMap.put("e", 55)
+       println(mutableMap) //HashMap(a -> 11, b -> 22, c -> 33, d -> 44, e -> 55)
+   
+       mutableMap += (("f", 66))
+       mutableMap += ("g" -> 77)
+       println(mutableMap) //HashMap(a -> 11, b -> 22, c -> 50, e -> 10, f -> 66, g -> 77)
+   
+       println("===================================")
+   
+       // 3. 删除元素
+       println(mutableMap.get("c")) //Some(33)
+       mutableMap.remove("c")
+       println(mutableMap.getOrElse("c", 0)) //0
+   
+       mutableMap -= "d"
+       mutableMap -= ("g", "c")
+       println(mutableMap) //HashMap(a -> 11, b -> 22, e -> 55, f -> 66)
+       println("===================================")
+   
+       // 4. 修改元素
+       mutableMap.update("c", 50)
+       mutableMap("e") = 10
+       println(mutableMap) //HashMap(a -> 11, b -> 22, c -> 50, e -> 10, f -> 66)
+   
+       println("===================================")
+   
+       // 5. 合并两个Map
+       val mutableMap2: mutable.Map[String, Int] = mutable.Map("aaa" -> 11, "b" -> 20, "hello" -> 44)
+       mutableMap ++= mutableMap2
+       println(mutableMap) //HashMap(aaa -> 11, a -> 11, b -> 20, c -> 50, e -> 10, f -> 66, hello -> 44)
+       println(mutableMap2) //HashMap(aaa -> 11, b -> 20, hello -> 44)
+   
+       println("---------------------------")
+   
+       val mutableMap3: mutable.Map[String, Int] = mutableMap ++ mutableMap2
+       println(mutableMap) //HashMap(aaa -> 11, a -> 11, b -> 20, c -> 50, e -> 10, f -> 66, hello -> 44)
+       println(mutableMap2) //HashMap(aaa -> 11, b -> 20, hello -> 44)
+       println(mutableMap3) //HashMap(aaa -> 11, a -> 11, b -> 20, c -> 50, e -> 10, f -> 66, hello -> 44)
+   
+       println("==============================")
+   
+       // 打印集合
+       mutableMap.foreach(kv => println(kv))
+       /*
+       (aaa,11)
+       (a,11)
+       (b,20)
+       (c,50)
+       (e,10)
+       (f,66)
+       (hello,44)
+        */
+   
+     }
+   
+   }
    ```
-
+   
    
 
 ## 元组
 
 1. 说明
 
-   元组也是可以理解为一个容器，可以存放各种相同或不同类型的数据。说的简单点，就是将多个无关的数据封装为一个整体，称为元组
+   元组也是可以理解为一个容器，可以存放各种相同或不同类型的数据。说的简单点，就是将多个无关的数据封装为一个整体，称为**元组**
 
    > 注意：元组中最大只能有 22 个元素。
 
@@ -5901,10 +6321,61 @@ Scala 中的 Map 和 Java 类似，也是一个散列表，它存储的内容也
    3. Map 中的键值对其实就是元组,只不过元组的元素个数为 2，称之为对偶
 
    ```scala
+   package com.scala.chapter07
    
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-13 12:25
+    * */
+   object Test10_Tuple {
+   
+     def main(args: Array[String]): Unit = {
+       // 1. 声明元组的方式：(元素 1，元素 2，元素 3)
+       val tuple: (String, Int, Char, Boolean) = ("hello", 100, 'a', true)
+       println(tuple) //(hello,100,a,true)
+   
+       println("=====================================")
+   
+       // 2. 访问数据
+       // 通过元素的顺序进行访问，调用方式：_顺序号
+       println(tuple._1) //hello
+       println(tuple._2) //100
+       println(tuple._3) //a
+       println(tuple._4) //true
+   
+       println("=====================================")
+   
+       //通过索引访问数据
+       println(tuple.productElement(1)) //100
+       println("=====================================")
+       // 3. 遍历元组数据
+       for (elem <- tuple.productIterator) {
+         println(elem)
+         /*
+         hello
+         100
+         a
+         true
+          */
+       }
+       println("=====================================")
+       // 4. 嵌套元组
+       val mulTuple = (11, 0.1, "hello", (10, "scala"))
+       println(mulTuple._4._2) //scala
+       println("=====================================")
+   
+       //Map 中的键值对其实就是元组,只不过元组的元素个数为 2，称之为对偶
+       val map = Map("a" -> 1, "b" -> 2, "c" -> 3)
+       val map2 = Map(("a", 1), ("b", 2), ("c", 3))
+   
+       map.foreach(tuple => println(tuple._1 + "=" + tuple._2))
+   
+     }
+   
+   }
    ```
-
-
 
 ## 集合常用函数
 
@@ -5922,10 +6393,81 @@ Scala 中的 Map 和 Java 类似，也是一个散列表，它存储的内容也
 2. 实例操作
 
    ```scala
+   package com.scala.chapter07
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-14 08:21
+    * */
+   object Test11_CommonOp {
+   
+     def main(args: Array[String]): Unit = {
+   
+       val list = List(11, 22, 33, 44, 55, 66)
+       val set = Set(10, 20, 30, 40, 50)
+   
+       // 1. 获取集合长度
+       println(list.length) //6
+   
+       // 2. 获取集合大小
+       println(set.size) //5
+   
+       println("===============================")
+   
+       // 2. 循环遍历
+       for (elem <- list) {
+         println(elem)
+         /*
+         11
+         22
+         33
+         44
+         55
+         66
+          */
+       }
+       println("===============================")
+   
+   
+       set.foreach(println)
+       /*
+       10
+       20
+       50
+       40
+       30
+        */
+   
+       println("===============================")
+       //2. 迭代器
+       for (elem <- list.iterator) println(elem)
+       /*
+       11
+       22
+       33
+       44
+       55
+       66
+        */
+   
+       println("===============================")
+       //5. 生成字符串
+       println(list) //List(11, 22, 33, 44, 55, 66)
+       println(set) //HashSet(10, 20, 50, 40, 30)
+       println(list.mkString("--")) //11--22--33--44--55--66
+   
+       println("===============================")
+   
+       //6. 是否包含
+       println(list.contains(22)) //true
+       println(set.contains(40)) //true
+     }
+   
+   }
    
    ```
-
-
 
 ### 衍生集合
 
@@ -5947,10 +6489,130 @@ Scala 中的 Map 和 Java 类似，也是一个散列表，它存储的内容也
 2. 案例实操
 
    ```scala
+   package com.scala.chapter07
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-14 08:37
+    * */
+   object Test12_DerivedCollection {
+   
+     def main(args: Array[String]): Unit = {
+   
+       val list = List(11, 22, 33, 44, 55, 66)
+       val list2 = List(10, 20, 30, 40, 50, 60)
+   
+       // 1. 获取集合的头
+       println(list.head) //11
+   
+       //2. 获取集合的尾（不是头的就是尾）
+       println(list.tail) //List(22, 33, 44, 55, 66)
+   
+   
+       // 3. 集合最后一个数据
+       println(list2.last) //60
+   
+       println("==============================")
+   
+       // 4. 集合初始数据（不包含最后一个）
+       println(list2.init) //List(10, 20, 30, 40, 50)
+   
+       //5. 反转
+       println(list.reverse) //List(66, 55, 44, 33, 22, 11)
+   
+       // 6. 取前（后）n个元素
+       println(list.take(3)) //List(11, 22, 33)
+       //从后取4个元素
+       println(list.takeRight(4)) //List(33, 44, 55, 66)
+   
+       println("==============================")
+   
+       // 7. 去掉前（后）n个元素
+       println(list.drop(3)) //List(44, 55, 66)
+       // 从右去掉4个元素
+       println(list.dropRight(4)) //List(11, 22)
+   
+   
+       println("==============================")
+   
+       // 8. 并集
+       val concat = list.concat(list2)
+       println("concat: " + concat) //concat: List(11, 22, 33, 44, 55, 66, 10, 20, 30, 40, 50, 60)
+       println(list ::: list2) //List(11, 22, 33, 44, 55, 66, 10, 20, 30, 40, 50, 60)
+   
+   
+       println("==============================")
+   
+       // 如果是set做并集，会去重
+       val set1 = Set(11, 22, 33, 44, 55)
+       val set2 = Set(10, 20, 30, 40, 11, 22)
+   
+       val concatSet = set1.concat(set2)
+       println("concat set: " + concatSet) //concat set: HashSet(10, 20, 33, 11, 30, 22, 44, 40, 55)
+       println(set1 ++ set2) //HashSet(10, 20, 33, 11, 30, 22, 44, 40, 55)
+   
+       println("==============================")
+   
+       // 9.交集
+       val intersect = set1.intersect(set2)
+       println("intersect: " + intersect) //intersect: HashSet(22, 11)
+   
+   
+       println("==============================")
+   
+       // 10. 差集
+       val diff1 = set1.diff(set2)
+       val diff2 = set2.diff(set1)
+       println("diff1: " + diff1) //diff1: HashSet(33, 44, 55)
+       println("diff2: " + diff2) //diff2: HashSet(10, 20, 40, 30)
+   
+       println("==============================")
+   
+       // 11. 拉链(注:如果两个集合的元素个数不相等，那么会将同等数量的数据进 行拉链，多余的数据省略不用)
+       println("zip: " + list.zip(list2)) //zip: List((11,10), (22,20), (33,30), (44,40), (55,50), (66,60))
+       println("zip: " + list2.zip(list)) //zip: List((10,11), (20,22), (30,33), (40,44), (50,55), (60,66))
+   
+       println("==============================")
+   
+       //  12. 滑窗
+       for (elem <- list.sliding(3))
+         println(elem)
+       /*
+       List(11, 22, 33)
+       List(22, 33, 44)
+       List(33, 44, 55)
+       List(44, 55, 66)
+        */
+   
+   
+       println("------------------------------------")
+   
+       for (elem <- list2.sliding(4, 2))
+         println(elem)
+   
+       /*
+       List(10, 20, 30, 40)
+       List(30, 40, 50, 60)
+        */
+   
+   
+       println("------------------------------------")
+   
+       for (elem <- list2.sliding(3, 3))
+         println(elem)
+   
+       /*
+       List(10, 20, 30)
+       List(40, 50, 60)
+        */
+   
+     }
+   
+   }
    
    ```
-
-
 
 ### 集合计算简单函数
 
@@ -5965,24 +6627,96 @@ Scala 中的 Map 和 Java 类似，也是一个散列表，它存储的内容也
 2. 实例操作
 
    ```scala
+   package com.scala.chapter07
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-14 10:05
+    * */
+   object Test13_SimpleFunction {
+   
+     def main(args: Array[String]): Unit = {
    
    
+       val list = List(1, 2, 3, 4, 5, 6)
+       val list2 = List(("a", 10), ("b", 20), ("c", 30), ("d", 40), ("e", 50), ("f", -1))
    
+       // 1. 求和
+       var sum = 0
+       for (elem <- list)
+         sum += elem
+   
+       println(sum) //21
+   
+   
+       //2. 求乘积
+       println(list.product) //720
+   
+       println("===================================")
+   
+       // 2. 最大值
+       println(list.max) //6
+       println(list2.maxBy((tuple: (String, Int)) => tuple._2)) //(e,50)
+       // 上面的方法可以简写如下
+       println(list2.maxBy(_._2)) //(e,50)
+   
+       println("===================================")
+   
+       //4. 最小值
+       println(list.min) //1
+       println(list2.minBy(_._2)) //(f,-1)
+   
+       println("===================================")
+   
+   
+       //5. 排序
+       // 5.1 sorted
+       val sortedList = list.sorted
+       println(sortedList) //List(1, 2, 3, 4, 5, 6)
+   
+       // 从大到小逆序排序
+       println(list.sorted.reverse) //List(6, 5, 4, 3, 2, 1)
+   
+       // 传入隐式参数
+       println(list.sorted(Ordering[Int].reverse)) //List(6, 5, 4, 3, 2, 1)
+   
+       // sorted对有内部多个List是不起作用的
+       println(list2.sorted) //List((a,10), (b,20), (c,30), (d,40), (e,50), (f,-1))
+   
+       println("-----------------------------------------")
+   
+       // 5.2 sortBy
+       println(list2.sortBy(_._2)) //List((f,-1), (a,10), (b,20), (c,30), (d,40), (e,50))
+       println(list2.sortBy(_._2)(Ordering[Int].reverse)) //List((e,50), (d,40), (c,30), (b,20), (a,10), (f,-1))
+   
+       println("-----------------------------------------")
+       // 5.3 sortWith
+       println(list.sortWith((a: Int, b: Int) => {
+         a < b
+       })) //List(1, 2, 3, 4, 5, 6)
+   
+       // 上面的方式可以简写如下
+       println(list.sortWith(_ < _)) //List(1, 2, 3, 4, 5, 6)
+   
+       println(list.sortWith(_ > _)) //List(6, 5, 4, 3, 2, 1)
+     }
+   
+   }
    ```
 
- 1.  sorted
+ 1.  `sorted`
 
-     对一个集合进行自然排序，通过传递隐式的 Ordering
+     对一个集合进行自然排序，通过传递隐式的 `Ordering`
 
- 2.  sortBy
+ 2.  `sortBy`
 
      对一个属性或多个属性进行排序，通过它的类型。
 
- 3.  sortWith
+ 3.  `sortWith`
 
-     基于函数的排序，通过一个 comparator 函数，实现自定义排序的逻辑
-
-
+     基于函数的排序，通过一个 `comparator `函数，实现自定义排序的逻辑
 
 ### 集合计算高级函数
 
@@ -5994,7 +6728,7 @@ Scala 中的 Map 和 Java 类似，也是一个散列表，它存储的内容也
 
    3. 扁平化
 
-   4. 扁平化+映射 注：flatMap 相当于先进行 map 操作，在进行 flatten 操作
+   4. 扁平化+映射 注：`flatMap `相当于先进行 map 操作，在进行 flatten 操作
 
       集合中的每个元素的子元素映射到某个函数并返回新集合
 
@@ -6009,15 +6743,104 @@ Scala 中的 Map 和 Java 类似，也是一个散列表，它存储的内容也
 2. 实例操作
 
    ```scala
+   package com.scala.chapter07
    
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-14 11:35
+    * */
+   object Test14_HighLevelFunction_Map {
+   
+     def main(args: Array[String]): Unit = {
+       val list = List(11, 22, 33, 44, 55, 66, 77)
+   
+       // 1. 过滤
+       // 选取偶数
+       val evenList = list.filter((elem: Int) => {
+         elem % 2 == 0
+       })
+       println(evenList) //List(22, 44, 66)
+   
+       // 选取奇数
+       println(list.filter(_ % 2 == 1)) //List(11, 33, 55, 77)
+   
+       println("======================================")
+   
+       // 2. 映射map
+       // 把集合中每个数乘2
+       println(list.map(_ * 2)) //List(22, 44, 66, 88, 110, 132, 154)
+       println(list.map(x => x * x)) //List(121, 484, 1089, 1936, 3025, 4356, 5929)
+   
+       println("======================================")
+   
+   
+       // 3. 扁平化
+       val nestedList: List[List[Int]] = List(List(1, 2, 3), List(4, 5), List(6, 7, 8, 9))
+       val flatList = nestedList(0) ::: nestedList(1) ::: nestedList(2)
+       println(flatList) //List(1, 2, 3, 4, 5, 6, 7, 8, 9)
+   
+       val flatList2 = nestedList.flatten
+       println(flatList2) //List(1, 2, 3, 4, 5, 6, 7, 8, 9)
+   
+       println("======================================")
+   
+       // 4. 扁平映射
+       // 将一组字符串进行分词，并保存成单词的列表
+       val strings: List[String] = List("hello world", "hello scala", "hello java", "we study")
+       val splitList: List[Array[String]] = strings.map(_.split(" ")) // 分词
+       val flattenList = splitList.flatten // 打散扁平化
+   
+       println(flattenList) //List(hello, world, hello, scala, hello, java, we, study)
+   
+       // 上面的方式也可以简写如下
+       // 扁平化+映射 注：flatMap 相当于先进行 map 操作，在进行 flatten 操作
+       val flatmapList = strings.flatMap(_.split(" "))
+       println(flatmapList) //List(hello, world, hello, scala, hello, java, we, study)
+   
+   
+       println("======================================")
+   
+       // 5. 分组groupBy
+       // 分成奇偶两组
+       val groupMap: Map[Int, List[Int]] = list.groupBy(_ % 2)
+       val groupMap2: Map[String, List[Int]] = list.groupBy(data => if (data % 2 == 0) "偶数" else "奇数")
+   
+       println(groupMap) //HashMap(0 -> List(22, 44, 66), 1 -> List(11, 33, 55, 77))
+       println(groupMap2) //HashMap(偶数 -> List(22, 44, 66), 奇数 -> List(11, 33, 55, 77))
+   
+       println("======================================")
+   
+       // 给定一组词汇，按照单词的首字母进行分组
+       val worldList = List("china", "america", "alice", "canada", "cary", "bob", "japan")
+       println(worldList.groupBy(_.charAt(0))) //HashMap(j -> List(japan), a -> List(america, alice), b -> List(bob), c -> List(china, canada, cary))
+   
+     }
+   
+   }
    ```
 
-3. Reduce 方法 
+3. `Reduce `方法 
 
-   Reduce 简化（归约） ：通过指定的逻辑将集合中的数据进行聚合，从而减少数据，最 终获取结果
+   `Reduce `简化（归约） ：通过指定的逻辑将集合中的数据进行聚合，从而减少数据，最 终获取结果
 
    ```scala
+       val list = List(11, 22, 33, 44, 55, 66)
    
+       // 1. reduce
+       println(list.reduce(_ + _)) //231
+       println(list.reduceLeft(_ + _)) //231
+       println(list.reduceRight(_ + _)) //231
+   
+       println("===============================")
+   
+       val list2 = List(10, 20, 30, 40, 50)
+       println(list2.reduce(_ - _)) //-130
+       println(list2.reduceLeft(_ - _)) //-130
+   
+       // (10-(20 - (30 - (40 - 50))
+       println(list2.reduceRight(_ - _)) //30
    ```
 
 4. Fold 方法
@@ -6027,15 +6850,56 @@ Scala 中的 Map 和 Java 类似，也是一个散列表，它存储的内容也
    1. 案例实操：fold 基本使用
 
       ```scala
+          // 2. fold
+          // fold 方法使用了函数柯里化，存在两个参数列表
+          // 第一个参数列表为 ： 零值（初始值）
+          // 第二个参数列表为： 简化规则
+          println(list.fold(10)(_ + _)) //241
       
+          // fold 底层其实为 foldLeft
+          // 10 - 11 - 22- 33 - 44 - 55 - 66
+          println(list.foldLeft(10)(_ - _)) //-221
+      
+          // 11 - (10-(20 - (30 - (40 - 50))
+          println(list2.foldRight(11)(_ - _)) //19
       ```
-
-      
-
+   
    2. 案例实操：两个集合合并
-
+   
       ```scala
+      package com.scala.chapter07
       
+      import scala.collection.mutable
+      
+      /**
+       * @program: scala
+       * @description: ${description}
+       * @author: JunWen
+       * @create: 2023-12-14 18:58
+       * */
+      object Test16_MergeMap {
+      
+        def main(args: Array[String]): Unit = {
+          val map = Map("a" -> 1, "b" -> 3, "c" -> 7)
+          val mutableMap = mutable.Map("a" -> 22, "b" -> 33, "c" -> 44, "d" -> 55)
+      
+          println(map ++ mutableMap) //Map(a -> 22, b -> 33, c -> 44, d -> 55)
+      
+      
+          val mergeMap = map.foldLeft(mutableMap)((result, kv) => {
+            val key = kv._1
+            val value = kv._2
+            result(key) = result.getOrElse(key, 0) + value
+            result
+      
+          })
+      
+          println(mergeMap) //HashMap(a -> 23, b -> 36, c -> 51, d -> 55)
+      
+      
+        }
+      
+      }
       ```
 
 
@@ -6053,10 +6917,383 @@ Scala 中的 Map 和 Java 类似，也是一个散列表，它存储的内容也
 3. 实例操作
 
    ```scala
+   package com.scala.chapter07
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-14 19:04
+    * */
+   object Test17_CommonWordCount {
+   
+     def main(args: Array[String]): Unit = {
+   
+       // 单词计数：将集合中出现的相同的单词，进行计数，取计数排名前三的结果
+       val stringList: List[String] = List(
+         "hello",
+         "hello world",
+         "hello scala",
+         "hello spark from scala",
+         "hello flink from scala",
+         "hello haddop"
+       )
+   
+       // 1. 对字符串进行切分，得到一个打散所有单词的列表
+       /*
+       val wordList: List[Array[String]] = stringList.map(_.split(" "))
+       val wordList2: List[String] = wordList.flatten
+       println(wordList2) //List(hello, hello, world, hello, scala, hello, spark, from, scala, hello, flink, from, scala, hello, haddop)
+    */
+   
+       // 上面的方式也可以简写为如下
+       val wordList = stringList.flatMap(_.split(" "))
+       println(wordList) //List(hello, hello, world, hello, scala, hello, spark, from, scala, hello, flink, from, scala, hello, haddop)
+   
+   
+       // 2. 相同的单词进行分组,
+       val groupMap: Map[String, List[String]] = wordList.groupBy(word => word)
+       println(groupMap) //HashMap(world -> List(world), flink -> List(flink), haddop -> List(haddop), spark -> List(spark), hello -> List(hello, hello, hello, hello, hello, hello), scala -> List(scala, scala, scala), from -> List(from, from))
+   
+   
+       // 3. 对分组之后的list取长度，得到每个单词的个数
+       // (word, list) => (word, count)
+       val countMap: Map[String, Int] = groupMap.map(kv => (kv._1, kv._2.size))
+       println(countMap) //HashMap(world -> 1, flink -> 1, haddop -> 1, spark -> 1, hello -> 6, scala -> 3, from -> 2)
+   
+       //4.  对计数完成后的结果进行排序（降序）, 对排序后的结果取前 3 名
+       val sortList: List[(String, Int)] = countMap.toList.sortWith(_._2 > _._2).take(3)
+   
+       println(sortList) //List((hello,6), (scala,3), (from,2))
+   
+     }
+   
+   }
    
    ```
 
 ### 复杂 WordCount 案例
+
+1. 方式一
+
+   ```scala
+   package com.scala.chapter07
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-14 19:04
+    * */
+   object Test18_ComplexWordCount {
+   
+     def main(args: Array[String]): Unit = {
+   
+       val tupleList: List[(String, Int)] = List(
+         ("hello", 1),
+         ("hello world", 2),
+         ("hello scala", 3),
+         ("hello spark from scala", 1),
+         ("hello flink from scala", 2)
+       )
+   
+       // 思路一：直接展开为普通版本
+         // 第一种方式（不通用）
+       val newStringList: List[String] = tupleList.map(
+         kv => {
+           (kv._1.trim + " ") * kv._2
+         }
+       )
+   
+       println(newStringList) //List(hello , hello world hello world , hello scala hello scala hello scala , hello spark from scala , hello flink from scala hello flink from scala )
+   
+   
+       // 接下来操作与普通版本完全一致
+       val wordCountList: List[(String, Int)] = newStringList
+         .flatMap(_.split(" ")) // 空格分词
+         .groupBy(word => word) // 按照单词分组
+         //在 map 中，如果传进来什么就返回什么，不要用_省略
+         .map(kv => (kv._1, kv._2.size)) // 统计出每个单词的个数
+         .toList
+         .sortBy(_._2)(Ordering[Int].reverse)
+         .take(3)
+   
+   
+       println(wordCountList) //List((hello,9), (scala,6), (from,3))
+     }
+   
+   }
+   
+   ```
+
+   
+
+2. 方式二
+
+   ```scala
+   package com.scala.chapter07
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-14 19:04
+    * */
+   object Test18_ComplexWordCount {
+   
+     def main(args: Array[String]): Unit = {
+   
+       val tupleList: List[(String, Int)] = List(
+         ("hello", 1),
+         ("hello world", 2),
+         ("hello scala", 3),
+         ("hello spark from scala", 1),
+         ("hello flink from scala", 2)
+       )
+   
+       // 思路二：直接基于预统计的结果进行转换
+       // 1. 将字符串打散为单词，并结合对应的个数包装成二元组
+       val preCountList: List[(String, Int)] = tupleList.flatMap(
+         tuple => {
+           val strings: Array[String] = tuple._1.split(" ")
+           strings.map(word => (word, tuple._2))
+         }
+       )
+   
+       println(preCountList) //List((hello,1), (hello,2), (world,2), (hello,3), (scala,3), (hello,1), (spark,1), (from,1), (scala,1), (hello,2), (flink,2), (from,2), (scala,2))
+   
+   
+       // 2. 对二元组按照单词进行分组
+       val preCountMap: Map[String, List[(String, Int)]] = preCountList.groupBy(_._1)
+       println(preCountMap) //HashMap(world -> List((world,2)), flink -> List((flink,2)), spark -> List((spark,1)), hello -> List((hello,1), (hello,2), (hello,3), (hello,1), (hello,2)), scala -> List((scala,3), (scala,1), (scala,2)), from -> List((from,1), (from,2)))
+   
+   
+       // 3. 叠加每个单词预统计的个数值
+       val countMap: Map[String, Int] = preCountMap.view.mapValues(tupleList => tupleList.map(_._2).sum).toMap
+   
+       println(countMap) //HashMap(world -> 2, flink -> 2, spark -> 1, hello -> 9, scala -> 6, from -> 3)
+   
+       // 4. 转换成list，排序取前3
+       val countList = countMap.toList
+         .sortWith(_._2 > _._2)
+         .take(3)
+   
+       println(countList) //List((hello,9), (scala,6), (from,3))
+   
+     }
+   
+   }
+   
+   ```
+
+
+
+## 队列
+
+1. 说明
+
+   Scala 也提供了队列（`Queue`）的数据结构，队列的特点就是先进先出。进队和出队的方法分别为 `enqueue `和 `dequeue`
+
+2. 实例操作
+
+   ```scala
+   package com.scala.chapter07
+   
+   import scala.collection.immutable.Queue
+   import scala.collection.mutable
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-14 19:05
+    * */
+   object Test19_Queue {
+   
+     def main(args: Array[String]): Unit = {
+       // 创建一个可变队列
+       val queue: mutable.Queue[String] = new mutable.Queue[String]()
+   
+       queue.enqueue("a", "b", "c")
+   
+       println(queue) //Queue(a, b, c)
+       println(queue.dequeue()) //a
+   
+       println(queue) //Queue(b, c)
+       println(queue.dequeue()) //b
+       println(queue) //Queue(c)
+   
+       println("-----------------------------------")
+   
+       queue.enqueue("d", "e")
+       println(queue) //Queue(c, d, e)
+       println(queue.dequeue()) //c
+       println(queue) //Queue(d, e)
+   
+       println("=========================================")
+   
+       // 不可变队列
+       val queue2: Queue[String] = Queue("a", "b", "c")
+       val queue3 = queue2.enqueue("d")
+       println(queue2) //Queue(a, b, c)
+       println(queue3) //Queue(a, b, c, d)
+   
+     }
+   
+   }
+   ```
+   
+   
+
+## 并行集合
+
+1. 说明
+
+   Scala 为了充分使用多核 CPU，提供了并行集合（有别于前面的串行集合），用于多核 环境的并行计算
+
+2. 实例操作
+
+   ```scala
+   package com.scala.chapter07
+   
+   import scala.collection.parallel.CollectionConverters.seqIsParallelizable
+   import scala.collection.parallel.ParSeq
+   
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-14 19:17
+    * */
+   object Test20_Parallel {
+   
+     def main(args: Array[String]): Unit = {
+   
+   
+       val result: IndexedSeq[Long] = (1 to 100).map(x => Thread.currentThread().getId)
+   
+       // 可以看到主要在main线程处理
+       println(result)
+       //Vector(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+   
+   
+       val result2: ParSeq[Long] = (1 to 100).par.map(x => Thread.currentThread().getId)
+   
+       // 可看到线程ID发生了变化
+       println(result2)
+       //ParVector(16, 16, 16, 23, 23, 23, 21, 21, 21, 21, 21, 21, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 18, 18, 18, 27, 27, 27, 22, 22, 22, 22, 22, 22, 20, 20, 20, 25, 18, 18, 25, 25, 25, 16, 16, 23, 23, 17, 17, 17, 19, 27, 27, 16, 27, 27, 17, 19, 19, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 21, 27, 27, 23, 19, 19, 24, 21, 21, 27, 27, 23, 23)
+   
+   
+     }
+   
+   }
+   
+   ```
+   
+   > 注:Scala2.13已把parallel移出,需导入后方能使用
+   >
+   > ```xml
+   > <dependency>
+   >     <groupId>org.scala-lang.modules</groupId>
+   >     <artifactId>scala-parallel-collections_2.13</artifactId>
+   >     <version>0.2.0</version>
+   > </dependency>
+   > ```
+
+------
+
+# 第八章 模式匹配
+
+Scala 中的模式匹配类**似于 Java 中的 switch 语法**
+
+```java
+int i = 10
+switch (i) {
+case 10 :
+	System.out.println("10");
+	break;
+case 20 :
+	System.out.println("20");
+	break;
+default :
+	System.out.println("other number");
+	break;
+}
+```
+
+但是 scala 从语法中补充了更多的功能，所以更加强大
+
+## 基本语法
+
+模式匹配语法中，采用 match 关键字声明，每个分支采用 case 关键字进行声明，当需 要匹配时，会从第一个 case 分支开始，如果匹配成功，那么执行对应的逻辑代码，如果匹 配不成功，继续执行下一个分支进行判断。如果所有 case 都不匹配，那么会执行 case _分支， 类似于 Java 中 default 语句
+
+```scala
+
+```
+
+1. 如果所有 case 都不匹配，那么会执行 case _ 分支，类似于 Java 中 default 语句， 若此时没有 case _ 分支，那么会抛出 MatchError
+2. 每个 case 中，不需要使用 break 语句，自动中断 case。
+3. match case 语句可以匹配任何类型，而不只是字面量。
+4. => 后面的代码块，直到下一个 case 语句之前的代码是作为一个整体执行，可以 使用{}括起来，也可以不括
+
+## 模式守卫
+
+1. 说明
+
+   如果想要表达匹配某个范围的数据，就需要在模式匹配中增加条件守卫
+
+2. 实例操作
+
+   ```scala
+   
+   ```
+
+## 模式匹配类型
+
+### 匹配常量
+
+1. 说明
+
+   Scala 中，模式匹配可以匹配所有的字面量，包括字符串，字符，数字，布尔值等等
+
+2. 实例操作
+
+   ```scala
+   
+   ```
+
+   
+
+### 匹配类型
+
+1. 说明
+
+   需要进行类型判断时，可以使用前文所学的 `isInstanceOf[T]`和 `asInstanceOf[T]`，也可使 用模式匹配实现同样的功能
+
+2. 实例操作
+
+   ```scala
+   
+   ```
+
+   
+
+### 匹配数组
+
+1. 说明
+
+   scala 模式匹配可以对集合进行精确的匹配，例如匹配只有两个元素的、且第一个元素 为 0 的数组
+
+1. 实例操作
+
+   ```scala
+   
+   ```
+
+
+
+### 匹配列表
 
 1. 方式一
 
@@ -6072,34 +7309,210 @@ Scala 中的 Map 和 Java 类似，也是一个散列表，它存储的内容也
    
    ```
 
+   
 
 
-## 队列
 
-1. 说明
+### 匹配元组
 
-   Scala 也提供了队列（Queue）的数据结构，队列的特点就是先进先出。进队和出队的方 法分别为 enqueue 和 dequeue
+```scala
 
-2. 实例操作
+```
+
+扩展案例
+
+```scala
+
+```
+
+### 匹配对象及样例类
+
+基本语法
+
+```scala
+
+```
+
+小结
+
+- val user = User("zhangsan",11)，该语句在执行时，实际调用的是 User 伴生对象中的 apply 方法，因此不用 new 关键字就能构造出相应的对象
+- 当将 User("zhangsan", 11)写在 case 后时[case User("zhangsan", 11) => "yes"]，会默 认调用 unapply 方法(对象提取器)，user 作为 unapply 方法的参数，unapply 方法 将 user 对象的 name 和 age 属性提取出来，与 User("zhangsan", 11)中的属性值进行 匹配
+- case 中对象的 unapply 方法(提取器)返回 Some，且所有属性均一致，才算匹配成功, 属性不一致，或返回 None，则匹配失败
+- 若只提取对象的一个属性，则提取器为 unapply(obj:Obj):Option[T]
+- 若提取对象的多个属性，则提取器为 unapply(obj:Obj):Option[(T1,T2,T3…)]
+- 若提取对象的可变个属性，则提取器为 unapplySeq(obj:Obj):Option[Seq[T]]
+
+
+
+样例类
+
+1. 语法
+
+   ```scala
+   case class Person (name: String, age: Int)
+   ```
+
+   
+
+2. 说明
+
+   1. 样例类仍然是类，和普通类相比，只是其自动生成了伴生对象，并且伴生对象中 自动提供了一些常用的方法，如 apply、unapply、toString、equals、hashCode 和 copy
+   2. 样例类是为模式匹配而优化的类，因为其默认提供了 unapply 方法，因此，样例 类可以直接使用模式匹配，而无需自己实现 unapply 方法
+   3. 构造器中的每一个参数都成为 val，除非它被显式地声明为 var（不建议这样做）
+
+3. 实例操作
+
+   上述匹配对象的案例使用样例类会节省大量代码
 
    ```scala
    
    ```
 
-   
 
-## 并行集合
 
-1. 说明
+##  变量声明中的模式匹配
 
-   Scala 为了充分使用多核 CPU，提供了并行集合（有别于前面的串行集合），用于多核 环境的并行计算
+```scala
 
-2. 实例操作
+```
+
+
+
+## for 表达式中的模式匹配
+
+```scala
+
+```
+
+## 偏函数中的模式匹配(了解)
+
+```scala
+
+```
+
+偏函数也是函数的一种，通过偏函数我们可以方便的对输入参数做更精确的检查。例如 该偏函数的输入类型为 List[Int]，而我们需要的是第一个元素是 0 的集合，这就是通过模式 匹配实现的
+
+1. 偏函数定义
 
    ```scala
    
    ```
+
+   > 注：该偏函数的功能是返回输入的 List 集合的第二个元素
+
+2. 偏函数原理
+
+   上述代码会被 scala 编译器翻译成以下代码，与普通函数相比，只是多了一个用于参数 检查的函数——isDefinedAt，其返回值类型为 Boolean
+
+   ```scala
+   
+   ```
+
+3. 偏函数使用
+
+   偏函数不能像 second(List(1,2,3))这样直接使用，因为这样会直接调用 apply 方法，而应 该调用 applyOrElse 方法，如下
+
+   ```scala
+   
+   ```
+
+   applyOrElse 方法的逻辑为 if (ifDefinedAt(list)) apply(list) else default。如果输入参数满 足条件，即 isDefinedAt 返回 true，则执行 apply 方法，否则执行 defalut 方法，default 方法 为参数不满足要求的处理逻辑。
+
+4. 案例操作
+
+   1. 需求
+
+      将该 List(1,2,3,4,5,6,"test")中的 Int 类型的元素加一，并去掉字符串
+
+      ```scala
+      
+      ```
+
+   2. 实例操作
+
+      ```scala
+      方法一：
+      List(1,2,3,4,5,6,"test").filter(_.isInstanceOf[Int]).map(_.asInstanceOf[Int] + 1).foreach(println)
+      方法二：
+      List(1, 2, 3, 4, 5, 6, "test").collect { case x: Int => x + 1 }.foreach(println)
+      
+      ```
+
+
 
 ------
 
-# 第八章 模式匹配
+# 第九章 异常
+
+语法处理上和 Java 类似，但是又不尽相同。
+
+## Java 异常处理
+
+```scala
+
+```
+
+> 注意事项
+>
+> 1. Java 语言按照 try—catch—finally 的方式来处理异常
+> 2. 不管有没有异常捕获，都会执行 finally，因此通常可以在 finally 代码块中释放资 源
+> 3. 可以有多个 catch，分别捕获对应的异常，这时需要把范围小的异常类写在前面， 把范围大的异常类写在后面，否则编译错误
+
+
+
+## Scala 异常处理
+
+```scala
+
+```
+
+1. 我们将可疑代码封装在 try 块中。在 try 块之后使用了一个 catch 处理程序来捕获异 常。如果发生任何异常，catch 处理程序将处理它，程序将不会异常终止
+
+2. Scala 的异常的工作机制和 Java 一样，但是 Scala 没有“checked（编译期）”异常， 即 Scala 没有编译异常这个概念，异常都是在运行的时候捕获处理
+
+3. 异常捕捉的机制与其他语言中一样，如果有异常发生，catch 子句是按次序捕捉的。 因此，在 catch 子句中，越具体的异常越要靠前，越普遍的异常越靠后，如果把越普遍的异 常写在前，把具体的异常写在后，在 Scala 中也不会报错，但这样是非常不好的编程风格
+
+4. finally 子句用于执行不管是正常处理还是有异常发生时都需要执行的步骤，一般用 于对象的清理工作，这点和 Java 一样
+
+5. 用 throw 关键字，抛出一个异常对象。所有异常都是 Throwable 的子类型。throw 表 达式是有类型的，就是 Nothing，因为 Nothing 是所有类型的子类型，所以 throw 表达式可以用在需要类型的地方
+
+   ```scala
+   
+   ```
+
+6. java 提供了 throws 关键字来声明异常。可以使用方法定义声明异常。它向调用者函 数提供了此方法可能引发此异常的信息。它有助于调用函数处理并将该代码包含在 try-catch 块中，以避免程序异常终止。在 Scala 中，可以使用 throws 注解来声明异常
+
+   ```scala
+   
+   ```
+
+
+
+------
+
+# 第十章 隐式转换
+
+
+
+> **当编译器第一次编译失败的时候，会在当前的环境中查找能让代码编译通过的方法，用 于将类型进行转换，实现二次编译**
+
+## 隐式函数
+
+1. 说明
+
+   隐式转换可以在不需改任何代码的情况下，扩展某个类的功能。
+
+2. 实例操作
+
+   需求：通过隐式转化为 Int 类型增加方法
+
+   ```scala
+   
+   ```
+
+
+
+
+
+## 隐式参数
+
