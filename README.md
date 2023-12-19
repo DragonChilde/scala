@@ -7226,16 +7226,62 @@ default :
 
 ## 基本语法
 
-模式匹配语法中，采用 match 关键字声明，每个分支采用 case 关键字进行声明，当需 要匹配时，会从第一个 case 分支开始，如果匹配成功，那么执行对应的逻辑代码，如果匹 配不成功，继续执行下一个分支进行判断。如果所有 case 都不匹配，那么会执行 case _分支， 类似于 Java 中 default 语句
+模式匹配语法中，采用 `match `关键字声明，每个分支采用 `case `关键字进行声明，当需 要匹配时，会从第一个 `case `分支开始，如果匹配成功，那么执行对应的逻辑代码，如果匹配不成功，继续执行下一个分支进行判断。如果所有 `case `都不匹配，那么会执行 `case _`分支， 类似于 Java 中 `default `语句
 
 ```scala
+package com.scala.chapter08
+
+/**
+ * @program: scala
+ * @description: ${description}
+ * @author: JunWen
+ * @create: 2023-12-15 11:33
+ * */
+object Test01_PatternMatchBase {
+
+  def main(args: Array[String]): Unit = {
+    // 1. 基本定义语法
+    val x: Int = 5
+    val y: String = x match {
+      case 1 => "one"
+      case 2 => "two"
+      case 3 => "three"
+      case _ => "other"
+    }
+
+    println(y) //other
+
+
+    // 2. 示例：用模式匹配实现简单二元运算
+    val a = 11
+    val b = 22
+
+    def matchDualOp(op: Char): Int = op match {
+      case '+' => a + b
+      case '-' => a - b
+      case '*' => a * b
+      case '/' => a / b
+      case '%' => a % b
+      case _ => -1
+    }
+
+    println(matchDualOp('+')) //33
+    println(matchDualOp('/')) //0
+    println(matchDualOp('\\')) //-1
+
+
+    println("=========================")
+
+  }
+
+}
 
 ```
 
-1. 如果所有 case 都不匹配，那么会执行 case _ 分支，类似于 Java 中 default 语句， 若此时没有 case _ 分支，那么会抛出 MatchError
-2. 每个 case 中，不需要使用 break 语句，自动中断 case。
-3. match case 语句可以匹配任何类型，而不只是字面量。
-4. => 后面的代码块，直到下一个 case 语句之前的代码是作为一个整体执行，可以 使用{}括起来，也可以不括
+1. 如果所有 `case `都不匹配，那么会执行 `case _` 分支，类似于 Java 中 default 语句， 若此时没有 `case _` 分支，那么会抛出 `MatchError`
+2. 每个 `case `中，不需要使用 `break `语句，自动中断 `case`。
+3. `match case` 语句可以匹配任何类型，而不只是字面量。
+4. => 后面的代码块，直到下一个 `case `语句之前的代码是**作为一个整体执行**，可以使用{}括起来，也可以不括
 
 ## 模式守卫
 
@@ -7246,6 +7292,20 @@ default :
 2. 实例操作
 
    ```scala
+       // 3. 模式守卫
+       // 求一个整数的绝对值
+       def abs(num: Int): Int = {
+         num match {
+           case i if i >= 0 => i
+           case i if i < 0 => -i
+         }
+       }
+   
+   
+       println(abs(10)) //10
+       println(abs(0)) //0
+       println(abs(-20)) //20
+   
    
    ```
 
@@ -7260,23 +7320,66 @@ default :
 2. 实例操作
 
    ```scala
+   package com.scala.chapter08
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-15 11:34
+    * */
+   object Test02_MatchTypes {
+   
+     def main(args: Array[String]): Unit = {
+       // 1. 匹配常量
+       def describeConst(x: Any): String = x match {
+         case 1 => "Int one"
+         case "hello" => "String hello"
+         case true => "Boolean true"
+         case '+' => "Char +"
+         case _ => ""
+       }
+   
+       println(describeConst("hello")) //String hello
+       println(describeConst('+')) //Char +
+       println(describeConst(0.3))
+   
+     }
+   
+   }
    
    ```
-
+   
    
 
 ### 匹配类型
 
 1. 说明
 
-   需要进行类型判断时，可以使用前文所学的 `isInstanceOf[T]`和 `asInstanceOf[T]`，也可使 用模式匹配实现同样的功能
+   需要进行类型判断时，可以使用前文所学的 `isInstanceOf[T]`和 `asInstanceOf[T]`，也可使用模式匹配实现同样的功能
 
 2. 实例操作
 
    ```scala
+       // 2. 匹配类型
+       def describeType(x: Any): String = x match {
+         case i: Int => "Int " + i
+         case s: String => "String " + s
+         case list: List[String] => "List " + list
+         case array: Array[Int] => "Array[Int] " + array.mkString(",")
+         case a => "Something else: " + a
+       }
    
+       println(describeType(22)) //Int 22
+       println(describeType("hello")) //String hello
+       println(describeType(List("hi", "hello"))) //List List(hi, hello)
+       // List 泛型擦除
+       println(describeType(List(10, 20))) //List List(10, 20)
+       ////数组例外，可保留泛型
+       println(describeType(Array("java", "scala"))) //Something else: [Ljava.lang.String;@2ef9b8bc
+       println(describeType(Array(11, 22))) //Array[Int] 11,22
    ```
-
+   
    
 
 ### 匹配数组
@@ -7288,41 +7391,113 @@ default :
 1. 实例操作
 
    ```scala
+       // 3. 匹配数组
+       for (arr <- List(
+         Array(0),
+         Array(1, 0),
+         Array(0, 1, 0),
+         Array(1, 1, 0),
+         Array(2, 3, 7, 15),
+         Array("hello", 1, 30),
+       )) {
+         val result = arr match {
+           case Array(0) => "0"  //匹配 Array(0) 这个数组
+           case Array(1, 0) => "Array(1,0)"
+           case Array(x, y) => "Array: " + x + " , " + y //匹配有两个元素的数组，然后将将元素值赋给对应的 x, y
+           case Array(0, _*) => "以0开头的数组"
+           case Array(x, 1, z) => "中间为1的三元素数组"
+           case _ => "something else"
    
+         }
+   
+         /*
+         0
+         Array(1,0)
+         以0开头的数组
+         中间为1的三元素数组
+         something else
+         中间为1的三元素数组
+          */
+         println(result)
+       }
    ```
-
-
 
 ### 匹配列表
 
 1. 方式一
 
    ```scala
+       for (list <- List(
+         List(0),
+         List(1, 0),
+         List(0, 0, 0),
+         List(1, 1, 0),
+         List(11),
+         List("hello")
+       )) {
+         val result = list match {
+           case List(0) => "0" //匹配 List(0)
+           case List(x, y) => "List(x,y): " + x + " , " + y //匹配有两个元素的 List
+           case List(0, _*) => "List(0,....)"
+           case List(a) => "List(a): " + a
+           case _ => "something else"
+         }
    
+         /*
+         0
+         List(x,y): 1 , 0
+         List(0,....)
+         something else
+         List(a): 11
+         List(a): hello
+          */
+         println(result)
+       }
    ```
-
-   
 
 2. 方式二
 
    ```scala
+       val list = List(11, 22, 33, 44, 55) //first : 11 , second: 22, rest : List(33, 44, 55)
+       val list2 = List(10)  //something else
    
+       list match {
+         case first :: second :: rest => println(s"first : $first , second: $second, rest : $rest")
+         case _ => println("something else")
+       }
    ```
-
    
-
-
 
 ### 匹配元组
 
 ```scala
+    //对一个元组集合进行遍历
+    for (tuple <- List(
+      (0, 1),
+      (0, 0),
+      (0, 1, 0),
+      (0, 1, 1),
+      (1, 23, 56),
+      ("hello", true, 0.5)
+    )) {
+      val result = tuple match {
+        case (a, b) => "" + a + " , " + b
+        case (0, _) => "(0,_)"   //是第一个元素是 0 的元组
+        case (a, 1, _) => "(a,1,_) " + a
+        case (x, y, z) => "(x,y,z) " + x + " " + y + " " + z
+        case _ => "something else"  //默认
+      }
 
-```
-
-扩展案例
-
-```scala
-
+      /*
+      0 , 1
+      0 , 0
+      (a,1,_) 0
+      (a,1,_) 0
+      (x,y,z) 1 23 56
+      (x,y,z) hello true 0.5
+       */
+      println(result)
+    }
 ```
 
 ### 匹配对象及样例类
@@ -7330,17 +7505,56 @@ default :
 基本语法
 
 ```scala
+package com.scala.chapter08
 
+/**
+ * @program: scala
+ * @description: ${description}
+ * @author: JunWen
+ * @create: 2023-12-15 11:35
+ * */
+object Test04_MatchObject {
+
+  def main(args: Array[String]): Unit = {
+    val student = Student("zhangsan", 11)
+
+    // 针对对象实例的内容进行匹配
+    val result = student match {
+      case Student("zhangsan", 11) => "zhangsan , 11"
+      case _ => "Else"
+    }
+
+    println(result)	//zhangsan , 11
+  }
+
+}
+
+// 定义类
+class Student(val name: String, val age: Int)
+
+// 定义伴生对象
+object Student {
+  def apply(name: String, age: Int): Student = new Student(name, age)
+
+  // 必须实现一个unapply方法，用来对对象属性进行拆解
+  def unapply(student: Student): Option[(String, Int)] = {
+    if (student == null) {
+      None
+    } else {
+      Some((student.name, student.age))
+    }
+  }
+}
 ```
 
 小结
 
-- val user = User("zhangsan",11)，该语句在执行时，实际调用的是 User 伴生对象中的 apply 方法，因此不用 new 关键字就能构造出相应的对象
-- 当将 User("zhangsan", 11)写在 case 后时[case User("zhangsan", 11) => "yes"]，会默 认调用 unapply 方法(对象提取器)，user 作为 unapply 方法的参数，unapply 方法 将 user 对象的 name 和 age 属性提取出来，与 User("zhangsan", 11)中的属性值进行 匹配
-- case 中对象的 unapply 方法(提取器)返回 Some，且所有属性均一致，才算匹配成功, 属性不一致，或返回 None，则匹配失败
-- 若只提取对象的一个属性，则提取器为 unapply(obj:Obj):Option[T]
-- 若提取对象的多个属性，则提取器为 unapply(obj:Obj):Option[(T1,T2,T3…)]
-- 若提取对象的可变个属性，则提取器为 unapplySeq(obj:Obj):Option[Seq[T]]
+- `val student = Student("zhangsan",11)`，该语句在执行时，实际调用的是 `Student`伴生对象中的 `apply `方法，因此不用 `new `关键字就能构造出相应的对象
+- 当将 `Student("zhangsan", 11)`写在 `case `后时`[case Student("zhangsan", 11) => ""zhangsan , 11"]`，会默认调用 `unapply `方法(对象提取器)，`student`作为 `unapply `方法的参数，`unapply `方法 将 `student`对象的 `name `和 `age `属性提取出来，与 `Student("zhangsan", 11)`中的属性值进行匹配
+- `case `中对象的 `unapply `方法(提取器)返回 `Some`，且所有属性均一致，才算匹配成功, 属性不一致，或返回 `None`，则匹配失败
+- 若只提取对象的一个属性，则提取器为 `unapply(obj:Obj):Option[T]`
+- 若提取对象的多个属性，则提取器为 `unapply(obj:Obj):Option[(T1,T2,T3…)]`
+- 若提取对象的可变个属性，则提取器为` unapplySeq(obj:Obj):Option[Seq[T]]`
 
 
 
@@ -7352,93 +7566,268 @@ default :
    case class Person (name: String, age: Int)
    ```
 
-   
-
 2. 说明
 
-   1. 样例类仍然是类，和普通类相比，只是其自动生成了伴生对象，并且伴生对象中 自动提供了一些常用的方法，如 apply、unapply、toString、equals、hashCode 和 copy
-   2. 样例类是为模式匹配而优化的类，因为其默认提供了 unapply 方法，因此，样例 类可以直接使用模式匹配，而无需自己实现 unapply 方法
-   3. 构造器中的每一个参数都成为 val，除非它被显式地声明为 var（不建议这样做）
+   1. 样例类仍然是类，和普通类相比，只是其自动生成了伴生对象，并且伴生对象中自动提供了一些常用的方法，如 `apply`、`unapply`、`toString`、`equals`、`hashCode `和 `copy`
+   2. 样例类是为模式匹配而优化的类，因为其默认提供了 `unapply `方法，因此，样例类可以直接使用模式匹配，而无需自己实现 `unapply `方法
+   3. 构造器中的每一个参数都成为 `val`，除非它被显式地声明为 `var`（不建议这样做）
 
 3. 实例操作
 
    上述匹配对象的案例使用样例类会节省大量代码
 
    ```scala
+   package com.scala.chapter08
    
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-15 11:35
+    * */
+   object Test05_MatchCaseClass {
+   
+     def main(args: Array[String]): Unit = {
+   
+   
+       val user = User("jack", 20)
+   
+       // 针对对象实例的内容进行匹配
+   
+       val result = user match {
+         case User("jack", 20) => "Jack , 20"
+         case _ => "Else"
+       }
+   
+       println(result) //Jack , 20
+     }
+   
+   }
+   
+   // 定义样例类
+   case class User(name: String, age: Int)
    ```
-
-
 
 ##  变量声明中的模式匹配
 
 ```scala
+package com.scala.chapter08
+
+/**
+ * @program: scala
+ * @description: ${description}
+ * @author: JunWen
+ * @create: 2023-12-15 11:34
+ * */
+object Test03_MatchTupleExtend {
+
+  def main(args: Array[String]): Unit = {
+
+    // 1. 在变量声明时匹配
+    val (x, y) = (10, "hello")
+    println(s"x: $x , y: $y") //x: 10 , y: hello
+
+    val List(first, second, _*) = List(11, 22, 33, 44)
+    println(s"first : $first , second: $second") //first : 11 , second: 22
+
+    val fir :: sec :: rest = List(10, 20, 30.50)
+    println(s"first : $fir , second: $sec, rest: $rest") //first : 10.0 , second: 20.0, rest: List(30.5)
+
+    println("===========================================")
+  }
+
+}
 
 ```
-
-
 
 ## for 表达式中的模式匹配
 
 ```scala
+package com.scala.chapter08
+
+/**
+ * @program: scala
+ * @description: ${description}
+ * @author: JunWen
+ * @create: 2023-12-15 11:34
+ * */
+object Test03_MatchTupleExtend {
+
+  def main(args: Array[String]): Unit = {
+
+    // 2. for推导式中进行模式匹配
+    val list: List[(String, Int)] = List(("a", 11), ("b", 20), ("c", 33), ("d", 40))
+    // 2.1 原本的遍历方式
+    for (elem <- list) {
+      println(elem._1 + " " + elem._2)
+      /*
+      a 11
+      b 20
+      c 33
+      d 40
+       */
+    }
+    println("--------------------------")
+    // 2.2 将List的元素直接定义为元组，对变量赋值
+    for ((word, count) <- list) {
+      println(word + ": " + count)
+      /*
+      a: 11
+      b: 20
+      c: 33
+      d: 40
+       */
+    }
+
+    println("--------------------------")
+
+    // 2.3 可以不考虑某个位置的变量，只遍历key或者value
+    for ((word, _) <- list)
+      println(word)
+    /*
+    a
+    b
+    c
+    d
+     */
+
+    println("--------------------------")
+
+    // 2.4 可以指定某个位置的值必须是多少
+    for (("a", count) <- list)
+      println(count) //11
+
+  }
+
+}
 
 ```
 
 ## 偏函数中的模式匹配(了解)
 
-```scala
-
-```
-
-偏函数也是函数的一种，通过偏函数我们可以方便的对输入参数做更精确的检查。例如 该偏函数的输入类型为 List[Int]，而我们需要的是第一个元素是 0 的集合，这就是通过模式 匹配实现的
+偏函数也是函数的一种，通过偏函数我们可以方便的对输入参数做更精确的检查。例如 该偏函数的输入类型为 `List[Int]`，而我们需要的是第一个元素是 0 的集合，这就是通过模式匹配实现的
 
 1. 偏函数定义
 
    ```scala
-   
+   val second: PartialFunction[List[Int], Option[Int]] = {
+    	case x :: y :: _ => Some(y)
+   }
    ```
 
    > 注：该偏函数的功能是返回输入的 List 集合的第二个元素
 
 2. 偏函数原理
 
-   上述代码会被 scala 编译器翻译成以下代码，与普通函数相比，只是多了一个用于参数 检查的函数——isDefinedAt，其返回值类型为 Boolean
+   上述代码会被 scala 编译器翻译成以下代码，与普通函数相比，只是多了一个用于参数 检查的函数——`isDefinedAt`，其返回值类型为 `Boolean`
 
    ```scala
+   val second = new PartialFunction[List[Int], Option[Int]] {
+   //检查输入参数是否合格
+   override def isDefinedAt(list: List[Int]): Boolean = list match
+   {
+    	case x :: y :: _ => true
+    	case _ => false
+   }
+    //执行函数逻辑
+   override def apply(list: List[Int]): Option[Int] = list match
+   {
+    	case x :: y :: _ => Some(y)
+    	}
+   }
    
    ```
 
 3. 偏函数使用
 
-   偏函数不能像 second(List(1,2,3))这样直接使用，因为这样会直接调用 apply 方法，而应 该调用 applyOrElse 方法，如下
+   偏函数不能像` second(List(1,2,3))`这样直接使用，因为这样会直接调用 `apply `方法，而应该调用 `applyOrElse `方法，如下
 
    ```scala
-   
+   second.applyOrElse(List(1,2,3), (_: List[Int]) => None)
    ```
 
-   applyOrElse 方法的逻辑为 if (ifDefinedAt(list)) apply(list) else default。如果输入参数满 足条件，即 isDefinedAt 返回 true，则执行 apply 方法，否则执行 defalut 方法，default 方法 为参数不满足要求的处理逻辑。
+   `applyOrElse `方法的逻辑为 `if (ifDefinedAt(list)) apply(list) else default`。如果输入参数满 足条件，即 `isDefinedAt `返回 `true`，则执行 `apply `方法，否则执行 `defalut `方法，`default `方法 为参数不满足要求的处理逻辑。
 
 4. 案例操作
 
    1. 需求
 
-      将该 List(1,2,3,4,5,6,"test")中的 Int 类型的元素加一，并去掉字符串
-
       ```scala
+      package com.scala.chapter08
       
+      /**
+       * @program: scala
+       * @description: ${description}
+       * @author: JunWen
+       * @create: 2023-12-15 11:35
+       * */
+      object Test06_PartialFunction {
+      
+        def main(args: Array[String]): Unit = {
+          val list: List[(String, Int)] = List(("a", 11), ("b", 22), ("c", 33), ("d", 10))
+      
+          // 1. map转换，实现key不变，value2倍
+          val newList = list.map(tuple => (tuple._1, tuple._2 * 2))
+      
+          // 2. 用模式匹配对元组元素赋值，实现功能
+          val newList2 = list.map(
+            tuple => {
+              tuple match {
+                case (word, count) => (word, count * 2)
+              }
+            }
+          )
+      
+          // 3. 省略lambda表达式的写法，进行简化
+          val newList3 = list.map {
+            case (word, count) => (word, count * 2)
+          }
+      
+          println(newList) //List((a,22), (b,44), (c,66), (d,20))
+          println(newList2) //List((a,22), (b,44), (c,66), (d,20))
+          println(newList3) //List((a,22), (b,44), (c,66), (d,20))
+      
+          println("====================================")
+      
+          // 偏函数的应用，求绝对值
+          // 对输入数据分为不同的情形：正、负、0
+          val positiveAbs: PartialFunction[Int, Int] = {
+            case x if x > 0 => x
+          }
+          val negativeAbs: PartialFunction[Int, Int] = {
+            case x if x < 0 => -x
+          }
+      
+          val zeroAbs: PartialFunction[Int, Int] = {
+            case 0 => 0
+          }
+      
+          def abs(x: Int): Int = (positiveAbs orElse negativeAbs orElse zeroAbs)(x)
+      
+          println(abs(-67)) // 67
+          println(abs(11)) //11
+          println(abs(0)) //0
+      
+        }
+      
+      }
       ```
-
+   
    2. 实例操作
-
-      ```scala
-      方法一：
-      List(1,2,3,4,5,6,"test").filter(_.isInstanceOf[Int]).map(_.asInstanceOf[Int] + 1).foreach(println)
-      方法二：
-      List(1, 2, 3, 4, 5, 6, "test").collect { case x: Int => x + 1 }.foreach(println)
-      
-      ```
-
-
+   
+      将该 List(1,2,3,4,5,6,"test")中的 Int 类型的元素加一，并去掉字符串。
+   
+      - 方法一
+   
+        ```scala
+        List(1,2,3,4,5,6,"test").filter(_.isInstanceOf[Int]).map(_.asInstanceOf[Int] + 1).foreach(println)
+        ```
+   
+      - 方法二
+   
+        ```scala
+        List(1, 2, 3, 4, 5, 6, "test").collect { case x: Int => x + 1 }.foreach(println)
+        ```
 
 ------
 
@@ -7448,22 +7837,68 @@ default :
 
 ## Java 异常处理
 
-```scala
+```java
+public class ExceptionDemo {
+    public static void main(String[] args) {
+        try {
+            int a = 10;
+            int b = 0;
+            int c = a / b;
+        }catch (ArithmeticException e){
+            // catch 时，需要将范围小的写到前面
+            e.printStackTrace();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            System.out.println("finally");
+        }
+    }
+}
 
 ```
 
 > 注意事项
 >
 > 1. Java 语言按照 try—catch—finally 的方式来处理异常
-> 2. 不管有没有异常捕获，都会执行 finally，因此通常可以在 finally 代码块中释放资 源
-> 3. 可以有多个 catch，分别捕获对应的异常，这时需要把范围小的异常类写在前面， 把范围大的异常类写在后面，否则编译错误
+> 2. 不管有没有异常捕获，都会执行 `finally`，因此通常可以在 `finally `代码块中释放资 源
+> 3. 可以有多个 `catch`，分别捕获对应的异常，这时需要把范围小的异常类写在前面， 把范围大的异常类写在后面，否则编译错误
 
 
 
 ## Scala 异常处理
 
 ```scala
+package com.scala.chapter09
 
+/**
+ * @program: scala
+ * @description: ${description}
+ * @author: JunWen
+ * @create: 2023-12-15 11:54
+ * */
+object Test01_Exception {
+
+  def main(args: Array[String]): Unit = {
+
+    try {
+      val n = 10 / 0
+    } catch {
+      case e: ArithmeticException => {
+        println("ArithmeticException")
+      }
+      case e: Exception => {
+        println("Exception")
+      }
+    } finally {
+      println("hand ending")
+    }
+    /*
+    ArithmeticException
+    hand ending
+     */
+  }
+
+}
 ```
 
 1. 我们将可疑代码封装在 try 块中。在 try 块之后使用了一个 catch 处理程序来捕获异 常。如果发生任何异常，catch 处理程序将处理它，程序将不会异常终止
@@ -7477,16 +7912,22 @@ default :
 5. 用 throw 关键字，抛出一个异常对象。所有异常都是 Throwable 的子类型。throw 表 达式是有类型的，就是 Nothing，因为 Nothing 是所有类型的子类型，所以 throw 表达式可以用在需要类型的地方
 
    ```scala
-   
+   def test():Nothing = {
+       throw new Exception("不对")
+   }
    ```
 
 6. java 提供了 throws 关键字来声明异常。可以使用方法定义声明异常。它向调用者函 数提供了此方法可能引发此异常的信息。它有助于调用函数处理并将该代码包含在 try-catch 块中，以避免程序异常终止。在 Scala 中，可以使用 throws 注解来声明异常
 
    ```scala
-   
+   def main(args: Array[String]): Unit = {
+       f11()
+   }
+   @throws(classOf[NumberFormatException])
+   def f11()={
+       "abc".toInt
+   }
    ```
-
-
 
 ------
 
@@ -7515,4 +7956,132 @@ default :
 
 
 ## 隐式参数
+
+普通方法或者函数中的参数可以通过 `implicit `关键字声明为隐式参数，调用该方法时， 就可以传入该参数，编译器会在相应的作用域寻找符合条件的隐式值。
+
+1. 说有
+
+   1. 同一个作用域中，相同类型的隐式值只能有一个
+   2. 编译器按照隐式参数的类型去寻找对应类型的隐式值，与隐式值的名称无关
+   3. 隐式参数优先于默认参数
+
+2. 实例操作
+
+   ```scala
+   
+   ```
+
+   
+
+## 隐式类
+
+在 Scala2.10 后提供了隐式类，可以使用 implicit 声明类，隐式类的非常强大，同样可 以扩展类的功能，在集合中隐式类会发挥重要的作用
+
+1. 隐式类说明
+
+   1. 其所带的构造参数有且只能有一个
+   2. 
+
+2. 实例操作
+
+   ```scala
+   
+   ```
+
+   
+
+## 隐式解析机制
+
+1. 说明
+
+   1. 首先会在当前代码作用域下查找隐式实体（隐式方法、隐式类、隐式对象）。（一 般是这种情况）
+   2. 如果第一条规则查找隐式实体失败，会继续在隐式参数的类型的作用域里查找。 类型的作用域是指与该类型相关联的全部伴生对象以及该类型所在包的包对象
+
+2. 实例操作
+
+   ```scala
+   
+   ```
+
+
+
+------
+
+# 第十一章 泛型
+
+## 协变和逆变
+
+1. 语法
+
+   1. ```scala
+      class MyList[+T]{ //协变
+      }
+      class MyList[-T]{ //逆变
+      }
+      class MyList[T] //不变
+      
+      ```
+
+      
+
+2. 说明
+
+   - 协变：Son 是 Father 的子类，则 MyList[Son] 也作为 MyList[Father]的“子类”。
+   - 逆变：Son 是 Father 的子类，则 MyList[Son]作为 MyList[Father]的“父类”
+   - 不变：Son 是 Father 的子类，则 MyList[Father]与 MyList[Son]“无父子关系”
+
+3. 实操
+
+   ```scala
+   
+   ```
+
+## 泛型上下限
+
+1. 语法
+
+   ```
+   Class PersonList[T <: Person]{ //泛型上限
+   }
+   Class PersonList[T >: Person]{ //泛型下限
+   }
+   ```
+
+2. 说明
+
+   泛型的上下限的作用是对传入的泛型进行限定
+
+3. 实例操作
+
+   ```scala
+   
+   ```
+
+
+
+
+
+## 上下文限定
+
+1. 语法
+
+   ```scala
+   def f[A : B](a: A) = println(a) //等同于 def f[A](a:A)(implicit arg:B[A])=println(a)
+   ```
+
+2. 说明
+
+   上下文限定是将泛型和隐式转换的结合产物，以下两者功能相同，使用上下文限定[A : Ordering]之后，方法内无法使用隐式参数名调用隐式参数，需要通过 `implicitly[Ordering[A]]` 获取隐式变量，如果此时无法查找到对应类型的隐式变量，会发生出错误。
+
+   ```scala
+   
+   ```
+
+3. 实例操作
+
+   ```scala
+   
+   ```
+
+
 

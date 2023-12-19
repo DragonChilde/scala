@@ -43,6 +43,7 @@ public class Main {
         numMap.put(6, "green");
         numMap.put(7, "red");
         numMap.put(8, "red");
+        numMap.put(9, "blue");
         numMap.put(10, "blue");
         numMap.put(11, "green");
         numMap.put(12, "red");
