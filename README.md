@@ -667,7 +667,7 @@ Java基本类型的包装类：Character、Byte、Short、Integer、Long、Float
 
 ### Scala数据类型
 
-![](http://www.dxb02.top/photos/scala/01.jpg)
+![](./photos/01.jpg)
 
 1. Scala中一切数据都是对象，**都是Any的子类**
 2. Scala中数据类型分为两大类：数值类型（AnyVal）、 引用类型（AnyRef），**不管是值类型还是引用类型都是对象**
@@ -1020,7 +1020,7 @@ public class TestDataTypeConversion {
 
 当 Scala 程序在进行赋值或者运算时，精度小的类型自动转换为精度大的数值类型，这 个就是自动类型转换（隐式转换）。数据类型按精度（容量）大小排序为
 
-![](http://www.dxb02.top/photos/scala/02.jpg)
+![](./photos/02.jpg)
 
 1.  基本说明
 
@@ -2298,7 +2298,7 @@ Scala 也为 for 循环这一常见的控制结构提供了非常多的特性，
 
 1. 基本语法
 
-   ![](http://www.dxb02.top/photos/scala/03.jpg)
+   ![](./photos/03.jpg)
 
 2. 实例操作
 
@@ -3672,7 +3672,7 @@ Scala 中语法和 Java 不同，补充了更多的功能
 
    1. 若使用 Java 的包管理风格，则包对象一般定义在其对应包下的 package.scala 文件中，包对象名与包名保持一致
 
-      ![](http://www.dxb02.top/photos/scala/04.jpg)
+      ![](./photos/04.jpg)
 
    2. 如采用嵌套方式管理包，则包对象可与包定义在同一文件中，但是要保证包对象 与包声明在同一作用域中
 
@@ -5052,11 +5052,11 @@ Scala 引入 `trait `特征，第一可以替代 Java 的接口，第二个也�
 
 - 第一种，一个类（Sub）混入的两个 trait（TraitA，TraitB）中具有相同的具体方法，且 两个 trait 之间没有任何关系，解决这类冲突问题，直接在类（Sub）中重写冲突方法
 
-  ![](http://www.dxb02.top/photos/scala/05.jpg)
+  ![](./photos/05.jpg)
 
 - 第二种，一个类（Sub）混入的两个 trait（TraitA，TraitB）中具有相同的具体方法，且两个 trait 继承自相同的 trait（TraitC），及所谓的“钻石问题”，解决这类冲突问题，Scala 采用了**特质叠加**的策略
 
-  ![](http://www.dxb02.top/photos/scala/06.jpg)
+  ![](./photos/06.jpg)
 
 所谓的**特质叠加**，就是将混入的多个 trait 中的冲突方法叠加起来，案例如下
 
@@ -5144,7 +5144,7 @@ class Student15 extends Person13 with Talent15 with Knowledge15 {
 
 当一个类混入多个特质的时候，scala 会对所有的特质及其父特质按照一定的顺序进行 排序，而此案例中的 super.describe()调用的实际上是排好序后的下一个特质中的 describe() 方法。，排序规则如下
 
-![](http://www.dxb02.top/photos/scala/07.jpg)
+![](./photos/07.jpg)
 
 
 
@@ -5354,7 +5354,7 @@ class Student15 extends Person13 with Talent15 with Knowledge15 {
 
 ### 不可变集合继承图
 
-![](http://www.dxb02.top/photos/scala/08.jpg)
+![](./photos/08.jpg)
 
 1. `Set`、`Map` 是 Java 中也有的集合
 2. Seq 是 Java 没有的，我们发现 List 归属到 Seq 了，因此这里的 List 就和 Java 不是同一个 概念了
@@ -5368,7 +5368,7 @@ class Student15 extends Person13 with Talent15 with Knowledge15 {
 
 ### 可变集合继承图
 
-![](http://www.dxb02.top/photos/scala/09.jpg)
+![](./photos/09.jpg)
 
 ## 数组
 
@@ -6912,7 +6912,7 @@ Scala 中的 Map 和 Java 类似，也是一个散列表，它存储的内容也
 
 2. 需求分析
 
-   ![](http://www.dxb02.top/photos/scala/10.jpg)
+   ![](./photos/10.jpg)
 
 3. 实例操作
 
@@ -7715,6 +7715,8 @@ object Test03_MatchTupleExtend {
    }
    ```
 
+   ![](E:\Learning\scala\photos\11.jpg)
+
    > 注：该偏函数的功能是返回输入的 List 集合的第二个元素
 
 2. 偏函数原理
@@ -7901,15 +7903,15 @@ object Test01_Exception {
 }
 ```
 
-1. 我们将可疑代码封装在 try 块中。在 try 块之后使用了一个 catch 处理程序来捕获异 常。如果发生任何异常，catch 处理程序将处理它，程序将不会异常终止
+1. 我们将可疑代码封装在 `try `块中。在 `try `块之后使用了一个 catch 处理程序来捕获异 常。如果发生任何异常，catch 处理程序将处理它，程序将不会异常终止
 
-2. Scala 的异常的工作机制和 Java 一样，但是 Scala 没有“checked（编译期）”异常， 即 Scala 没有编译异常这个概念，异常都是在运行的时候捕获处理
+2. Scala 的异常的工作机制和 Java 一样，但是 **Scala 没有“checked（编译期）”异常**， 即 Scala 没有编译异常这个概念，异常都是在运行的时候捕获处理
 
-3. 异常捕捉的机制与其他语言中一样，如果有异常发生，catch 子句是按次序捕捉的。 因此，在 catch 子句中，越具体的异常越要靠前，越普遍的异常越靠后，如果把越普遍的异 常写在前，把具体的异常写在后，在 Scala 中也不会报错，但这样是非常不好的编程风格
+3. 异常捕捉的机制与其他语言中一样，如果有异常发生，`catch `子句是按次序捕捉的。 因此，在 `catch `子句中，越具体的异常越要靠前，越普遍的异常越靠后，如果把越普遍的异 常写在前，把具体的异常写在后，在 Scala 中也不会报错，但这样是非常不好的编程风格
 
-4. finally 子句用于执行不管是正常处理还是有异常发生时都需要执行的步骤，一般用 于对象的清理工作，这点和 Java 一样
+4. `finally `子句用于执行不管是正常处理还是有异常发生时都需要执行的步骤，一般用 于对象的清理工作，这点和 Java 一样
 
-5. 用 throw 关键字，抛出一个异常对象。所有异常都是 Throwable 的子类型。throw 表 达式是有类型的，就是 Nothing，因为 Nothing 是所有类型的子类型，所以 throw 表达式可以用在需要类型的地方
+5. 用 `throw `关键字，抛出一个异常对象。**所有异常都是 `Throwable `的子类型。`throw `表达式是有类型的，就是 `Nothing`**，因为 `Nothing `是所有类型的子类型，所以 `throw `表达式可以用在需要类型的地方
 
    ```scala
    def test():Nothing = {
@@ -7917,7 +7919,7 @@ object Test01_Exception {
    }
    ```
 
-6. java 提供了 throws 关键字来声明异常。可以使用方法定义声明异常。它向调用者函 数提供了此方法可能引发此异常的信息。它有助于调用函数处理并将该代码包含在 try-catch 块中，以避免程序异常终止。在 Scala 中，可以使用 throws 注解来声明异常
+6. java 提供了 `throws `关键字来声明异常。可以使用方法定义声明异常。它向调用者函数提供了此方法可能引发此异常的信息。它有助于调用函数处理并将该代码包含在 `try-catch` 块中，以避免程序异常终止。在 Scala 中，可以使用 `throws `注解来声明异常
 
    ```scala
    def main(args: Array[String]): Unit = {
@@ -7948,12 +7950,50 @@ object Test01_Exception {
    需求：通过隐式转化为 Int 类型增加方法
 
    ```scala
+   package com.scala.chapter09
+   
+   import scala.language.implicitConversions
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-15 11:54
+    * */
+   object Test02_Implicit {
+   
+     def main(args: Array[String]): Unit = {
+   
+   
+       val myRichInt = new MyRichInt(11)
+       println(myRichInt.myMax(22)) //22
+   
+       println("===================================")
+   
+       // 1. 隐式函数
+         // 使用 implicit 关键字声明的函数称之为隐式函数
+       implicit def convert(num: Int): MyRichInt = new MyRichInt(num)
+         
+        // 当想调用对象功能时，如果编译错误，那么编译器会尝试在当前作用域范围内查找能调用对应功能的转换规则
+       // 这个调用过程是由编译器完成的 ，所以称之为隐式转换 。也称之为自动转换
+       println(11.myMax(22)) //22
+   
+   
+     }
+   
+   }
+   
+   
+   // 自定义类
+   class MyRichInt(val self: Int) {
+   
+     // 自定义比较大小的方法
+     def myMax(n: Int): Int = if (n < self) self else n
+   
+     def myMin(n: Int): Int = if (n < self) n else self
+   }
    
    ```
-
-
-
-
 
 ## 隐式参数
 
@@ -7968,39 +8008,143 @@ object Test01_Exception {
 2. 实例操作
 
    ```scala
+   package com.scala.chapter09
+   
+   import scala.language.implicitConversions
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-15 11:54
+    * */
+   object Test02_Implicit {
+   
+     def main(args: Array[String]): Unit = {
+       // 3. 隐式参数
+       implicit val str: String = "jack"
+       implicit val num: Int = 22
+   
+       def sayHello()(implicit name: String): Unit = {
+         println("hello, " + name)
+       }
+   
+       def sayHi(implicit name: String = "terry"): Unit = {
+         println("hi , " + name)
+       }
+   
+       sayHello
+       sayHello()("tom") //hello, jack
+       sayHi //hi , jack
+       println("===================================")
+   
+   
+       // 简便写法
+       def hiAge(): Unit = {
+         println("hi , " + implicitly[Int])
+       }
+   
+       hiAge() //hi , 22
+   
+     }
+   
+   }
+   
    
    ```
-
+   
    
 
 ## 隐式类
 
-在 Scala2.10 后提供了隐式类，可以使用 implicit 声明类，隐式类的非常强大，同样可 以扩展类的功能，在集合中隐式类会发挥重要的作用
+在 Scala2.10 后提供了隐式类，可以使用 `implicit `声明类，隐式类的非常强大，同样可 以扩展类的功能，在集合中隐式类会发挥重要的作用
 
 1. 隐式类说明
 
    1. 其所带的构造参数有且只能有一个
-   2. 
+   2. 隐式类必须被定义在“类”或“伴生对象”或“包对象”里，即隐式类不能是**顶级的**。
 
 2. 实例操作
 
    ```scala
+   package com.scala.chapter09
    
+   import scala.language.implicitConversions
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-15 11:54
+    * */
+   object Test02_Implicit {
+   
+     def main(args: Array[String]): Unit = {
+   
+       // 2. 隐式类
+       implicit class MyRichInt2(val self: Int) {
+         // 自定义比较大小的方法
+         def myMax2(n: Int): Int = if (n < self) self else n
+   
+         def myMin2(n: Int): Int = if (n < self) n else self
+       }
+   
+       println(22.myMax2(11)) //22
+   
+       println("===================================")
+   
+     }
+   
+   }
    ```
-
    
 
 ## 隐式解析机制
 
 1. 说明
 
-   1. 首先会在当前代码作用域下查找隐式实体（隐式方法、隐式类、隐式对象）。（一 般是这种情况）
-   2. 如果第一条规则查找隐式实体失败，会继续在隐式参数的类型的作用域里查找。 类型的作用域是指与该类型相关联的全部伴生对象以及该类型所在包的包对象
+   1. 首先会在当前代码作用域下查找隐式实体（隐式方法、隐式类、隐式对象）。（**一般是这种情况**）
+   2. 如果第一条规则查找隐式实体失败，会继续在隐式参数的类型的作用域里查找。 **类型的作用域是指与该类型相关联的全部伴生对象以及该类型所在包的包对象**
 
 2. 实例操作
 
    ```scala
+   package com.scala.chapter09
    
+   
+   import com.scala.chapter09.PersonTrait.Person5
+   import com.scala.chapter09.TestTransform.Teacher
+   
+   //（2）如果第一条规则查找隐式实体失败，会继续在隐式参数的类型的作用域里查找。 类型的作用域是指与该类型相关联的全部伴生模块，
+   object TestTransform {
+   
+   
+     def main(args: Array[String]): Unit = {
+   
+       //（1）首先会在当前代码作用域下查找隐式实体
+       val teacher = new Teacher()
+       teacher.eat()
+       teacher.say()
+     }
+   
+     class Teacher {
+       def eat(): Unit = {
+         println("eat...")
+       }
+     }
+   }
+   
+   
+   trait PersonTrait {}
+   
+   object PersonTrait {
+     // 隐式类 : 类型 1 => 类型 2
+     implicit class Person5(user: Teacher) {
+       def say(): Unit = {
+         println("say...")
+       }
+     }
+   }
    ```
 
 
@@ -8015,24 +8159,58 @@ object Test01_Exception {
 
    1. ```scala
       class MyList[+T]{ //协变
+          
       }
       class MyList[-T]{ //逆变
+          
       }
       class MyList[T] //不变
-      
       ```
-
+      
       
 
 2. 说明
 
-   - 协变：Son 是 Father 的子类，则 MyList[Son] 也作为 MyList[Father]的“子类”。
-   - 逆变：Son 是 Father 的子类，则 MyList[Son]作为 MyList[Father]的“父类”
-   - 不变：Son 是 Father 的子类，则 MyList[Father]与 MyList[Son]“无父子关系”
+   - 协变：Son 是 Father 的**子类**，则 ``MyList[Son]`` 也作为` MyList[Father]`的“子类”。
+   - 逆变：Son 是 Father 的子类，则 `MyList[Son]`作为` MyList[Father]`的“父类”
+   - 不变：Son 是 Father 的子类，则 `MyList[Father]`与 `MyList[Son]`“无父子关系”
 
 3. 实操
 
    ```scala
+   package com.scala.chapter09
+   
+   /**
+    * @program: scala
+    * @description: ${description}
+    * @author: JunWen
+    * @create: 2023-12-15 11:55
+    * */
+   object Test03_Generics {
+   
+     def main(args: Array[String]): Unit = {
+       // 1. 协变和逆变
+       val child: Parent = new Child
+   
+       // error
+       //val childList:MyCollection[Parent] = new MyCollection[Child]
+   
+       val childList: MyCollection[SubChild] = new MyCollection[Child]
+   
+     }
+   
+   }
+   
+   
+   // 定义继承关系
+   class Parent {}
+   
+   class Child extends Parent {}
+   
+   class SubChild extends Child {}
+   
+   // 定义带泛型的集合类型
+   class MyCollection[-E] {}
    
    ```
 
@@ -8040,10 +8218,12 @@ object Test01_Exception {
 
 1. 语法
 
-   ```
+   ```scala
    Class PersonList[T <: Person]{ //泛型上限
+   
    }
    Class PersonList[T >: Person]{ //泛型下限
+       
    }
    ```
 
@@ -8054,12 +8234,14 @@ object Test01_Exception {
 3. 实例操作
 
    ```scala
+       // 2. 上下限
+       def test[A <: Child](a: A): Unit = {
+         println(a.getClass.getName)
+       }
+   
+       test[SubChild](new SubChild) //com.scala.chapter09.SubChild
    
    ```
-
-
-
-
 
 ## 上下文限定
 
@@ -8071,16 +8253,19 @@ object Test01_Exception {
 
 2. 说明
 
-   上下文限定是将泛型和隐式转换的结合产物，以下两者功能相同，使用上下文限定[A : Ordering]之后，方法内无法使用隐式参数名调用隐式参数，需要通过 `implicitly[Ordering[A]]` 获取隐式变量，如果此时无法查找到对应类型的隐式变量，会发生出错误。
+   上下文限定是将泛型和隐式转换的结合产物，以下两者功能相同，使用上下文限定`[A : Ordering]`之后，方法内无法使用隐式参数名调用隐式参数，需要通过 `implicitly[Ordering[A]]` 获取隐式变量，如果此时无法查找到对应类型的隐式变量，会发生出错误。
 
    ```scala
-   
+   implicit val x = 1
+   val y = implicitly[Int]
+   val z = implicitly[Double]
    ```
 
 3. 实例操作
 
    ```scala
-   
+   def f[A:Ordering](a:A,b:A) =implicitly[Ordering[A]].compare(a,b)
+   def f[A](a: A, b: A)(implicit ord: Ordering[A]) = ord.compare(a, b)
    ```
 
 
